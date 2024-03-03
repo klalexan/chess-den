@@ -5,12 +5,14 @@ import { BehaviorSubject } from 'rxjs';
 import { Status } from '../../models/chess/status.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {MatExpansionModule} from '@angular/material/expansion';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
+import {Key, Piece, Role} from 'chessground/types';
 
 @Component({
   selector: 'app-chessgame',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatExpansionModule],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
@@ -22,7 +24,6 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   board: any;
   availableMoves = new BehaviorSubject<string[]>([]);
   fen = new FormControl('8/2k5/8/8/4P3/4K3/8/8 w - - 0 1');
-  showBoard = signal(true);
   engineMove =  signal('');
   emtpyBoard:string = '8/8/8/8/8/8/8/8 w - - 0 1';
 
@@ -36,14 +37,23 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
     if (boardElement) {
       this.board = Chessground(boardElement, {});
       this.board.set({
+        
         turnColor: 'white',
         movable: {
+          events: {
+            after: (orig: string, dest: string, metadata: any) => {
+              console.log('after', orig, dest, metadata);
+            },
+            afterNewPiece: (role: Role, key: Key, metadata: any) => {
+              console.log('afterNewPiece', role, key, metadata);
+            }
+          },
           color: 'both',
         },
         events: {
           move: (orig:string, dest:string) => {
           },
-          dropNewPiece: (piece: any, key: string) => {
+          dropNewPiece: (piece: Piece, key: Key) => {
             console.log('dropNewPiece', piece, key);
           },
           select: (key: string) => {
@@ -54,33 +64,16 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
           },
           change: () => {
             this.fen.setValue(this.board.getFen() + ' w - - 0 1');
-            // console.log(this.board.getFen());
+            console.log(this.board.getFen());
           }
         },
         draggable: {
-          deleteOnDropOff: true,
-        },
-        selectable: {
           enabled: true,
         },
         drawable: {
           enabled: true,
           visible: true,
-        },
-        animation: {
-          enabled: true,
-          duration: 200,
-        },
-        disableContextMenu: false,
-        resizable: true,
-        addPieceZIndex: true,
-        coordinates: true,
-        autoCastle: true,
-        viewOnly: false,
-        blockTouchScroll: false,
-        addDimensionsCssVarsTo: boardElement,
-        trustAllEvents: false,
-
+        }
       });
     }
       this.status.subscribe((status: Status) => {
@@ -109,9 +102,8 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   }
 
   public setBoard(): void {
-    if (this.showBoard()) {
-      this.board.set({fen: this.chess.fen()});
-    }
+    this.board.set({fen: this.chess.fen()});
+    
   }
 
   makeHumanMove(move: string, effect: boolean): void {
@@ -178,9 +170,8 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
     this.setBoard();
   }
 
-  setBoardAsVisible(event: Event): void {
-    const ischecked = (<HTMLInputElement>event.target).checked
-    this.showBoard.set(ischecked);
+  dragNewPiece(piece: Piece, event: Event): void {
+    this.board.dragNewPiece(piece, event);
   }
 }
 
