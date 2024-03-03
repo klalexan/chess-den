@@ -1,0 +1,46 @@
+.chess-page {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+
+}
+
+.chessboard {
+    width: 600px;
+    height: 600px;
+}
+
+.fen-area {
+    width: 70%;
+    padding-right: 1%;
+}
+
+.start-new-game {
+    width: 25%;
+}
+
+.new-game {
+    display: flex;
+    margin-top: 1%;
+    width: 100%;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.chess-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.moves {
+    display: flex;
+    width: 30%;
+    flex-direction: row;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+.button-move {
+    width: 90px;
+}

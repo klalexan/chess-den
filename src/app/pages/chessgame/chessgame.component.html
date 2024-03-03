@@ -1,0 +1,32 @@
+
+<div class="chess-page">
+    <div class="new-game">
+        <textarea class="form-control" id="floatingTextarea" class="fen-area" placeholder="Please enter FEN" [formControl]="fen"></textarea>
+        <button type="button" class="btn btn-primary start-new-game" (click)="startNewGame()">New Game</button>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" (change)="setBoardAsVisible($event)" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+              Show Board
+            </label>
+          </div>
+    </div>    
+    <div class="chess-container">
+        <div class="moves">
+            @for (move of availableMoves.getValue(); track move) {
+                <button type="button" class="btn btn-primary button-move" (click)="makeHumanMove(move, true)">{{move}}</button>
+            }
+            <button type="button" class="btn btn-secondary" (click)="undo()">UNDO</button>
+        </div>
+        
+        <div class="engine-move">
+            <label>Computer move:</label>
+            <span>{{engineMove()}}</span>
+        </div>
+
+        <div class="blue merida">
+            <div id="board" class="chessboard"></div>
+        </div>
+            
+    </div>  
+</div>
+
