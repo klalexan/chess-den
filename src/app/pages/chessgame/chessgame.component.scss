@@ -38,7 +38,7 @@
 .new-game {
     display: flex;
     margin-top: 1%;
-    width: 100%;
+    width: 70%;
     justify-content: space-around;
     flex-direction: row;
 }
@@ -46,16 +46,23 @@
 .move-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    min-height: 30vh;
+    margin-top: 5%;
+    min-height: 25vh;
 }
 
 .moves {
     display: flex;
-    width: 30%;
+    width: 50%;
     flex-direction: row;
     align-items: start;
     flex-wrap: wrap;
+}
+
+.engine-move {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .button-move {
