@@ -47,7 +47,7 @@
     display: flex;
     flex-direction: row;
     margin-top: 5%;
-    min-height: 25vh;
+    min-height: 20vh;
 }
 
 .moves {
@@ -63,6 +63,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    width: 50%;
 }
 
 .button-move {

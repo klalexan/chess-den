@@ -3,8 +3,9 @@
     <div class="new-game">
         <textarea class="form-control" id="floatingTextarea" class="fen-area" placeholder="Please enter FEN" [formControl]="fen"></textarea>
         <button type="button" class="btn btn-primary start-new-game" (click)="startNewGame()">New Game</button>
+        <button type="button" class="btn btn-secondary" (click)="undo()">UNDO</button>
     </div>    
-    <div class="move-container">
+    <!-- <div class="move-container">
         <div class="moves">
             @for (move of availableMoves.getValue(); track move) {
                 <button type="button" class="btn btn-primary button-move" (click)="makeHumanMove(move, true)">{{move}}</button>
@@ -16,7 +17,7 @@
             <label>Computer move:</label>
             <span>{{engineMove()}}</span>
         </div>
-    </div>
+    </div> -->
     <div class="chessboard-conatainer">
         <mat-accordion>
             <mat-expansion-panel>

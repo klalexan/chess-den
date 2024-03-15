@@ -23,7 +23,7 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   status: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.white);
   board: any;
   availableMoves = new BehaviorSubject<string[]>([]);
-  fen = new FormControl('8/2k5/8/8/4P3/4K3/8/8 w - - 0 1');
+  fen = new FormControl('8/2k5/8/4P3/4K3/8/8/8 w - - 0 1');
   engineMove =  signal('');
   emtpyBoard:string = '8/8/8/8/8/8/8/8 w - - 0 1';
 
@@ -52,6 +52,7 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
         },
         events: {
           move: (orig:string, dest:string) => {
+            this.makeHumanMove(orig+dest, false);
           },
           dropNewPiece: (piece: Piece, key: Key) => {
             console.log('dropNewPiece', piece, key);
@@ -107,6 +108,8 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   }
 
   makeHumanMove(move: string, effect: boolean): void {
+
+
     if (this.engine.humanMove(this.chess, move)) {
       if (effect) {
         this.setBoard();
@@ -116,6 +119,8 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
       } else {
         this.status.next( Status.black);
       }
+    } else {
+      this.undoInvalidMove();
     }
   }
 
@@ -157,6 +162,13 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
     if (this.engine.turn(this.chess) === 'b') {
       this.engine.undo(this.chess);
     }
+    this.availableMoves.next(this.chess.moves());
+    this.setBoard();
+  }
+
+  undoInvalidMove(): void {
+    this.engine.undo(this.chess);
+    this.availableMoves.next(this.chess.moves());
     this.setBoard();
   }
 

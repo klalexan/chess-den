@@ -12,8 +12,14 @@ export class EngineService {
     
   }
 
-  public humanMove(chess: Chess, move: string): Move | null {
-    return chess.move(move);
+  public humanMove(chess: Chess, move: string): boolean {
+    try {
+       chess.move(move);
+       return true;
+    } catch (e:any) {
+      return false;
+    }
+    
   }
 
   public move(chess: Chess, from: string, to: string, promotion: string): boolean {
