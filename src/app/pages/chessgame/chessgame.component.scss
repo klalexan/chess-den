@@ -43,20 +43,7 @@
     flex-direction: row;
 }
 
-.move-container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 5%;
-    min-height: 20vh;
-}
 
-.moves {
-    display: flex;
-    width: 50%;
-    flex-direction: row;
-    align-items: start;
-    flex-wrap: wrap;
-}
 
 .engine-move {
     display: flex;
@@ -66,6 +53,9 @@
     width: 50%;
 }
 
-.button-move {
-    width: 90px;
+.chess-gama-navbar {
+    min-width: 50%;
+    justify-content: space-between;
+    align-items: center;
+
 }

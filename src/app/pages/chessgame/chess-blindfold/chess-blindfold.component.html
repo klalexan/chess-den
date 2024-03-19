@@ -1,0 +1,27 @@
+    <div class="move-container">
+        <div class="engine-move">
+            <label>Computer move:</label>
+            <span>{{engineMove}}</span>
+        </div>
+
+        <div class="container moves">
+            @for (move of availableMoves; track move; let i = $index) {
+                
+                    <div *ngIf="i % 6 == 0" class="row moves-row">
+                        <button type="button" class="btn btn-secondary col-1" (click)="setSelectedMove(move)">{{move}}</button>
+                        <button  *ngIf="availableMoves[i+1]" type="button" class="btn btn-secondary col-1 offset-1" (click)="setSelectedMove(availableMoves[i+1])">{{availableMoves[i+1]}}</button>
+                        <button  *ngIf="availableMoves[i+2]" type="button" class="btn btn-secondary col-1 offset-1" (click)="setSelectedMove(availableMoves[i+2])">{{availableMoves[i+2]}}</button>
+                        <button  *ngIf="availableMoves[i+3]" type="button" class="btn btn-secondary col-1 offset-1" (click)="setSelectedMove(availableMoves[i+3])">{{availableMoves[i+3]}}</button>
+                        <button  *ngIf="availableMoves[i+4]" type="button" class="btn btn-secondary col-1 offset-1" (click)="setSelectedMove(availableMoves[i+4])">{{availableMoves[i+4]}}</button>
+                        <button  *ngIf="availableMoves[i+5]" type="button" class="btn btn-secondary col-1 offset-1" (click)="setSelectedMove(availableMoves[i+5])">{{availableMoves[i+5]}}</button>
+                    </div>
+                
+            }
+            @empty {
+                <div>No Moves Yet</div>
+            }
+           
+        </div>
+        
+        
+    </div>

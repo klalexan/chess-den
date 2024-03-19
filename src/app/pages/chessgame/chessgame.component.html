@@ -4,38 +4,30 @@
         <textarea class="form-control" id="floatingTextarea" class="fen-area" placeholder="Please enter FEN" [formControl]="fen"></textarea>
         <button type="button" class="btn btn-primary start-new-game" (click)="startNewGame()">New Game</button>
         <button type="button" class="btn btn-secondary" (click)="undo()">UNDO</button>
-    </div>    
-    <!-- <div class="move-container">
-        <div class="moves">
-            @for (move of availableMoves.getValue(); track move) {
-                <button type="button" class="btn btn-primary button-move" (click)="makeHumanMove(move, true)">{{move}}</button>
-            }
-            <button type="button" class="btn btn-secondary" (click)="undo()">UNDO</button>
-        </div>
-        
-        <div class="engine-move">
-            <label>Computer move:</label>
-            <span>{{engineMove()}}</span>
-        </div>
-    </div> -->
-    <div class="chessboard-conatainer">
-        <mat-accordion>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      Show/Hide Board
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-
-                  <div class="blue merida chessboard-area">
-                    <div id="board" class="chessboard"></div>
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
-        
     </div>
-  
     
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 chess-gama-navbar">
+              <li class="nav-item">
+                <a routerLink='board-game' class="nav-link active" aria-current="page">Board Game</a>
+              </li>
+              <li class="nav-item">
+                <a routerLink="blind-fold" class="nav-link">Blind Fold</a>
+              </li>
+              <li class="nav-item">
+                <a routerLink="moves" class="nav-link">Moves</a>
+              </li>
+              <li class="nav-item">
+                <a routerLink="settings" class="nav-link">Settings</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <router-outlet></router-outlet>
 
     <!-- <div style="width: 100px; height: 100px; margin-top:10px; background-image: url('assets/images/pieces/merida/bB.svg');" (click)="dragNewPiece({role: 'bishop', color: 'black'}, $event)"></div>       -->
 </div>

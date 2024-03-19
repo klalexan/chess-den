@@ -9,15 +9,17 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
 import {Key, Piece, Role} from 'chessground/types';
+import { RouterModule } from '@angular/router';
+import { ChessgameService } from '../../services/chessgame/chessgame.service';
 
 @Component({
   selector: 'app-chessgame',
-  imports: [ReactiveFormsModule, CommonModule, MatExpansionModule],
+  imports: [ReactiveFormsModule, CommonModule, MatExpansionModule, RouterModule],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
 })
-export class ChessgameComponent implements OnInit, AfterViewInit {
+export class ChessgameComponent implements OnInit {
 
   chess: Chess;
   status: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.white);
@@ -28,59 +30,22 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   emtpyBoard:string = '8/8/8/8/8/8/8/8 w - - 0 1';
 
 
-  constructor(private engine: EngineService) {
+  constructor(private engine: EngineService, private chessService: ChessgameService) {
     this.chess = this.engine.getChessInstance();
    }
 
   ngOnInit(): void {
+    this.chessService.getSelectedMove().subscribe((move: string) => {
+      if (move) {
+        this.makeHumanMove(move, true);
+      }
+    });
     const boardElement = document.getElementById('board');
-    if (boardElement) {
-      this.board = Chessground(boardElement, {});
-      this.board.set({
-        
-        turnColor: 'white',
-        movable: {
-          events: {
-            after: (orig: string, dest: string, metadata: any) => {
-              console.log('after', orig, dest, metadata);
-            },
-            afterNewPiece: (role: Role, key: Key, metadata: any) => {
-              console.log('afterNewPiece', role, key, metadata);
-            }
-          },
-          color: 'both',
-        },
-        events: {
-          move: (orig:string, dest:string) => {
-            this.makeHumanMove(orig+dest, false);
-          },
-          dropNewPiece: (piece: Piece, key: Key) => {
-            console.log('dropNewPiece', piece, key);
-          },
-          select: (key: string) => {
-            console.log('select', key);
-          },
-          insert: (elements: any) => {
-            console.log('insert', elements);
-          },
-          change: () => {
-            this.fen.setValue(this.board.getFen() + ' w - - 0 1');
-            console.log(this.board.getFen());
-          }
-        },
-        draggable: {
-          enabled: true,
-        },
-        drawable: {
-          enabled: true,
-          visible: true,
-        }
-      });
-    }
-      this.status.subscribe((status: Status) => {
+   
+    this.status.subscribe((status: Status) => {
         switch (status) {
           case Status.white:
-            this.availableMoves.next(this.chess.moves());
+            this.chessService.setAvailableMoves(this.chess.moves());
             break;
           case Status.black:
             this.makeMove();
@@ -95,11 +60,7 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
             this.endGame();
             break;
         }
-      });
-      }
-
-  ngAfterViewInit(): void {
-   
+    });
   }
 
   public setBoard(): void {
@@ -108,11 +69,9 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   }
 
   makeHumanMove(move: string, effect: boolean): void {
-
-
     if (this.engine.humanMove(this.chess, move)) {
       if (effect) {
-        this.setBoard();
+        // this.setBoard();
       }
       if (this.engine.isGameOver(this.chess)) {
         this.status.next(Status.checkmate);
@@ -127,18 +86,17 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
   public makeMove(): void {
     this.engine.getBestMove(this.chess).then((bestMove: string) => {
       if (bestMove) {
-        console.log(bestMove);
         const from = bestMove.substring(0,2);
         const to = bestMove.substring(2,4);
         const promotion = bestMove.length === 5 ? bestMove.substring(4,5): '';
         const moves = this.chess.moves({ verbose: true });
         for (const move of moves) {
           if (move.from === from && move.to === to) {
-            this.engineMove.set(move.san);
+            this.chessService.setEngineMove(move.san);
           }
         }
         this.engine.move(this.chess, from, to, promotion);
-        this.setBoard();
+        // this.setBoard();
         if (this.engine.isGameOver(this.chess)) {
           this.status.next(Status.checkmate);
         } else {
@@ -174,12 +132,11 @@ export class ChessgameComponent implements OnInit, AfterViewInit {
 
   startNewGame(): void {
     this.chess = this.engine.getChessInstance();
-    console.log(this.board.getFen());
     if (this.fen.value) {
       this.chess.load(this.fen.value);
       this.status.next(Status.white);
     }
-    this.setBoard();
+    // this.setBoard();
   }
 
   dragNewPiece(piece: Piece, event: Event): void {

@@ -1,0 +1,25 @@
+.move-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
+}
+
+.moves {
+    margin-top: 2%;
+    // display: flex;
+    // width: 50%;
+    // flex-direction: row;
+    // align-items: start;
+    // flex-wrap: wrap;
+}
+
+// .button-move {
+//     width: 75px;
+//     margin-left: 3px;
+//     margin-right: 3px;
+// }
+
+.moves-row {
+    margin-top: 2%;
+}
