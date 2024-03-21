@@ -24,7 +24,6 @@ export class ChessgameComponent implements OnInit {
   chess: Chess;
   status: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.white);
   board: any;
-  availableMoves = new BehaviorSubject<string[]>([]);
   fen = new FormControl('8/2k5/8/4P3/4K3/8/8/8 w - - 0 1');
   engineMove =  signal('');
   emtpyBoard:string = '8/8/8/8/8/8/8/8 w - - 0 1';
@@ -40,7 +39,6 @@ export class ChessgameComponent implements OnInit {
         this.makeHumanMove(move, true);
       }
     });
-    const boardElement = document.getElementById('board');
    
     this.status.subscribe((status: Status) => {
         switch (status) {
@@ -64,14 +62,14 @@ export class ChessgameComponent implements OnInit {
   }
 
   public setBoard(): void {
-    this.board.set({fen: this.chess.fen()});
+    this.chessService.setFen(this.chess.fen());
     
   }
 
   makeHumanMove(move: string, effect: boolean): void {
     if (this.engine.humanMove(this.chess, move)) {
       if (effect) {
-        // this.setBoard();
+        this.setBoard();
       }
       if (this.engine.isGameOver(this.chess)) {
         this.status.next(Status.checkmate);
@@ -96,7 +94,7 @@ export class ChessgameComponent implements OnInit {
           }
         }
         this.engine.move(this.chess, from, to, promotion);
-        // this.setBoard();
+        this.setBoard();
         if (this.engine.isGameOver(this.chess)) {
           this.status.next(Status.checkmate);
         } else {
@@ -120,13 +118,13 @@ export class ChessgameComponent implements OnInit {
     if (this.engine.turn(this.chess) === 'b') {
       this.engine.undo(this.chess);
     }
-    this.availableMoves.next(this.chess.moves());
+    this.chessService.setAvailableMoves(this.chess.moves());
     this.setBoard();
   }
 
   undoInvalidMove(): void {
     this.engine.undo(this.chess);
-    this.availableMoves.next(this.chess.moves());
+    this.chessService.setAvailableMoves(this.chess.moves());
     this.setBoard();
   }
 
@@ -136,7 +134,7 @@ export class ChessgameComponent implements OnInit {
       this.chess.load(this.fen.value);
       this.status.next(Status.white);
     }
-    // this.setBoard();
+    this.setBoard();
   }
 
   dragNewPiece(piece: Piece, event: Event): void {

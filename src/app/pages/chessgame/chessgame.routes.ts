@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { ChessBoardGameComponent } from './chess-board-game/chess-board-game.component';
 import { ChessBlindfoldComponent } from './chess-blindfold/chess-blindfold.component';
+import { ChessMovesComponent } from './chess-moves/chess-moves.component';
 
 export const chessRoutes: Routes = [
     {
@@ -22,7 +23,7 @@ export const chessRoutes: Routes = [
     },
     {
         path: 'moves',
-        component: ChessBoardGameComponent,
+        component: ChessMovesComponent,
         data: {
         }
     },

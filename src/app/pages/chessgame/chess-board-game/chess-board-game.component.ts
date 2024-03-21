@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
 import {Key, Piece, Role} from 'chessground/types';
+import { ChessgameService } from '../../../services/chessgame/chessgame.service';
 
 @Component({
   selector: 'app-chess-board-game',
@@ -13,6 +14,8 @@ import {Key, Piece, Role} from 'chessground/types';
 export class ChessBoardGameComponent implements OnInit {
 
   board: any;
+
+  constructor(private chessService: ChessgameService) { }
 
   ngOnInit(): void {
     const boardElement = document.getElementById('board');
@@ -34,7 +37,7 @@ export class ChessBoardGameComponent implements OnInit {
         },
         events: {
           move: (orig:string, dest:string) => {
-            // this.makeHumanMove(orig+dest, false);
+            this.setSelectedMove(orig+dest);
           },
           dropNewPiece: (piece: Piece, key: Key) => {
             console.log('dropNewPiece', piece, key);
@@ -59,6 +62,16 @@ export class ChessBoardGameComponent implements OnInit {
         }
       });
     }
+
+    this.chessService.getFen().subscribe((fen: string) => {
+      if (fen) {
+        this.board.set({ fen: fen });
+      }
+    });
+  }
+
+  setSelectedMove(move: string) {
+    this.chessService.setSelectedMove(move);
   }
 
 }
