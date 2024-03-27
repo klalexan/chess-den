@@ -4,6 +4,7 @@
         <textarea class="form-control" id="floatingTextarea" class="fen-area" placeholder="Please enter FEN" [formControl]="fen"></textarea>
         <button type="button" class="btn btn-primary start-new-game" (click)="startNewGame()">New Game</button>
         <button type="button" class="btn btn-secondary" (click)="undo()">UNDO</button>
+        <button type="button" class="btn btn-info" (click)="setOrientation()">Play for {{ computerColor() }}</button>
     </div>
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">

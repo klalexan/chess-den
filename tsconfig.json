@@ -2,6 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "src",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -23,7 +24,17 @@
       "ES2022",
       "dom"
     ],
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@assets/*": ["assets/*"],
+      "@env/*": ["environments/*"],
+      "@app/*": ["app/*"],
+      "@layout/*": ["app/layout/*"],
+      "@models/*": ["app/models/*"],
+      "@pages/*": ["app/pages/*"],
+      "@services/*": ["app/services/*"]
+    },
+    "allowSyntheticDefaultImports": true,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

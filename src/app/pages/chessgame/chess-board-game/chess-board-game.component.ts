@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
-import {Key, Piece, Role} from 'chessground/types';
-import { ChessgameService } from '../../../services/chessgame/chessgame.service';
+import {Key, Piece, Role, Color} from 'chessground/types';
+import { ChessgameService } from '@services/chessgame/chessgame.service';
 
 @Component({
   selector: 'app-chess-board-game',
@@ -68,10 +68,20 @@ export class ChessBoardGameComponent implements OnInit {
         this.board.set({ fen: fen });
       }
     });
+
+    this.chessService.getPlayerColor().subscribe((color: Color) => {
+      if (color) {
+        this.setOrientation(color);
+      }
+    });
   }
 
   setSelectedMove(move: string) {
     this.chessService.setSelectedMove(move);
+  }
+
+  setOrientation(color: Color) {
+    this.board.set({ orientation: color });
   }
 
 }

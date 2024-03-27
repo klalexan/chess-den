@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, OnInit, effect, signal } from '@angular/core';
-import { EngineService } from '../../services/engine.service';
+import { Component, OnInit, effect, signal } from '@angular/core';
+import { EngineService } from '@services/engine.service';
 import { Chess } from 'chess.js';
 import { BehaviorSubject } from 'rxjs';
-import { Status } from '../../models/chess/status.model';
+import { Status } from '@models/chess/status.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Chessground } from 'chessground';
 import { Api } from 'chessground/api';
-import {Key, Piece, Role} from 'chessground/types';
+import {Key, Piece, Role, Color} from 'chessground/types';
 import { RouterModule } from '@angular/router';
-import { ChessgameService } from '../../services/chessgame/chessgame.service';
+import { ChessgameService } from '@services/chessgame/chessgame.service';
 
 @Component({
   selector: 'app-chessgame',
@@ -27,6 +27,7 @@ export class ChessgameComponent implements OnInit {
   fen = new FormControl('8/2k5/8/4P3/4K3/8/8/8 w - - 0 1');
   engineMove =  signal('');
   emtpyBoard:string = '8/8/8/8/8/8/8/8 w - - 0 1';
+  playerColor = signal<Color>('white');
 
 
   constructor(private engine: EngineService, private chessService: ChessgameService) {
@@ -43,14 +44,14 @@ export class ChessgameComponent implements OnInit {
     this.status.subscribe((status: Status) => {
         switch (status) {
           case Status.white:
-            this.chessService.setAvailableMoves(this.chess.moves());
-            break;
           case Status.black:
-            this.makeMove();
+            if (this.playerColor() === status) {
+              this.chessService.setAvailableMoves(this.chess.moves());
+            } else {
+              this.makeMove();
+            }
             break;
           case Status.draw:
-            this.drawGame();
-            break;
           case Status.stalemate:
             this.drawGame();
             break;
@@ -74,7 +75,7 @@ export class ChessgameComponent implements OnInit {
       if (this.engine.isGameOver(this.chess)) {
         this.status.next(Status.checkmate);
       } else {
-        this.status.next( Status.black);
+        this.status.next(this.playerColor() === 'white' ? Status.black : Status.white);
       }
     } else {
       this.undoInvalidMove();
@@ -98,7 +99,7 @@ export class ChessgameComponent implements OnInit {
         if (this.engine.isGameOver(this.chess)) {
           this.status.next(Status.checkmate);
         } else {
-          this.status.next(Status.white);
+          this.status.next(this.computerColor() === 'white' ? Status.black : Status.white);
         }
       }
     });
@@ -123,7 +124,6 @@ export class ChessgameComponent implements OnInit {
   }
 
   undoInvalidMove(): void {
-    this.engine.undo(this.chess);
     this.chessService.setAvailableMoves(this.chess.moves());
     this.setBoard();
   }
@@ -132,13 +132,23 @@ export class ChessgameComponent implements OnInit {
     this.chess = this.engine.getChessInstance();
     if (this.fen.value) {
       this.chess.load(this.fen.value);
-      this.status.next(Status.white);
+      this.status.next(this.playerColor() === 'white' ? Status.white : Status.black);
     }
     this.setBoard();
   }
 
   dragNewPiece(piece: Piece, event: Event): void {
     this.board.dragNewPiece(piece, event);
+  }
+
+  setOrientation(): void {
+    this.playerColor.set(this.computerColor());
+    this.chessService.setPlayerColor(this.playerColor());
+    this.status.next(this.computerColor() === 'white' ? Status.white : Status.black);
+  }
+
+  computerColor(): Color {
+    return this.playerColor() === 'white' ? 'black' : 'white';
   }
 }
 
