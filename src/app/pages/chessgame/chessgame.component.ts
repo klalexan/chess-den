@@ -1,14 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, effect, signal } from '@angular/core';
-import { EngineService } from '../../services/engine.service';
+import { Component } from '@angular/core';
 import { Chess } from 'chess.js';
-import { BehaviorSubject } from 'rxjs';
-import { Status } from '../../models/chess/status.model';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {MatExpansionModule} from '@angular/material/expansion';
-import { Chessground } from 'chessground';
-import { Api } from 'chessground/api';
-import {Key, Piece, Role} from 'chessground/types';
 import { StockfishService } from '../../services/stockfish.service';
 import { ChessGameService } from '../../services/chessgame.service';
 import { ChessboardComponent } from "../../components/chessboard/chessboard.component";
@@ -16,12 +8,12 @@ import { AvailableMovesComponent } from "../../components/available-moves/availa
 
 @Component({
   selector: 'app-chessgame',
-  imports: [ReactiveFormsModule, CommonModule, ChessboardComponent, AvailableMovesComponent],
+  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
 })
-export class ChessgameComponent implements OnInit {
+export class ChessgameComponent {
   game: Chess;
   availableMoves: string[];
   blindfoldMode: boolean = false;

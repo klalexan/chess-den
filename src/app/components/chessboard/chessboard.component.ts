@@ -55,9 +55,10 @@ export class ChessboardComponent implements OnChanges {
     const game = this.chessGame.loadGameFromFen(this.fen);
     const move = this.chessGame.move(game, { from, to });
     if (move) {
-      this.board.set({ fen: this.fen });
+      this.board.set({ fen: game.fen() });
       this.newFen.emit(game.fen());
     } else {
+      this.board.set({ fen: this.fen });
       this.highlightInvalidMove(from, to);
     }
     
