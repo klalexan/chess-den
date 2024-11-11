@@ -22,7 +22,7 @@
     "@angular/router": "^17.2.0",
     "bootstrap": "^5.3.3",
     "chess.js": "^1.0.0-beta.8",
-    "chessground": "^9.0.4",
+    "chessground": "^9.1.1",
     "rxjs": "~7.8.0",
     "stockfish": "^16.0.0",
     "tslib": "^2.3.0",
