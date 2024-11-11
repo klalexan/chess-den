@@ -5,27 +5,6 @@
     min-height: calc(100vh - 140px);
 }
 
-.chessboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 2%;
-}
-
-.chessboard {
-    width: 600px;
-    height: 600px;
-}
-
-.chessboard-area {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 2%;
-}
-
 .fen-area {
     width: 70%;
     padding-right: 1%;
@@ -72,4 +51,18 @@
 .square.highlight {
     border: 2px solid red !important;
     background-color: rgba(255, 0, 0, 0.3); /* Optional background color */
+  }
+
+  button {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 16px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #005bb5;
   }

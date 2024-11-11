@@ -14,7 +14,7 @@ import { ChessGameService } from '../../services/chessgame.service';
 
 @Component({
   selector: 'app-chessgame',
-  imports: [ReactiveFormsModule, CommonModule, MatExpansionModule],
+  imports: [ReactiveFormsModule, CommonModule],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
@@ -23,14 +23,15 @@ export class ChessgameComponent implements OnInit {
   game: Chess;
   // status: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.white);
   board: any;
-  // availableMoves = new BehaviorSubject<string[]>([]);
+  availableMoves = new BehaviorSubject<string[]>([]);
+  blindfoldMode: boolean = false;
   isStockfishPlayAsWhite: boolean = true;
 
   constructor(
     private chessGame: ChessGameService,
     private stockfishService: StockfishService) {
 
-    this.game = this.chessGame.newGame();
+      this.game = this.chessGame.newGame();
    }
 
   ngOnInit(): void {
@@ -41,16 +42,10 @@ export class ChessgameComponent implements OnInit {
         orientation: 'white',
         movable: {
           events: {
-            after: this.onMove.bind(this)
+            after: (from: string, to: string) => this.onMove(from, to)
           },
           color: 'both',
         },
-        // events: {
-        //   change: () => {
-        //     this.fen.setValue(this.board.getFen() + ' w - - 0 1');
-        //     console.log(this.board.getFen());
-        //   }
-        // },
         draggable: {
           enabled: true,
         },
@@ -60,35 +55,32 @@ export class ChessgameComponent implements OnInit {
         },
         fen: this.game.fen()
       });
-
-      if (this.isStockfishPlayAsWhite) {
-        this.stockfishService.getBestMove(this.game.fen()).then(bestMove => {
-          console.log("Best Move Suggested by Stockfish:", bestMove);
-          this.makeEngineMove(bestMove);
-        });
-      }
     }
-      // this.status.subscribe((status: Status) => {
-      //   switch (status) {
-      //     case Status.white:
-      //       this.availableMoves.next(this.chess.moves());
-      //       break;
-      //     case Status.black:
-      //       this.makeMove();
-      //       break;
-      //     case Status.draw:
-      //       this.drawGame();
-      //       break;
-      //     case Status.stalemate:
-      //       this.drawGame();
-      //       break;
-      //     case Status.checkmate:
-      //       this.endGame();
-      //       break;
-      //   }
-      // });
+  }
+
+      // Create game on Lichess
+  public createNewGame(): void {
+    this.game = this.chessGame.newGame();
+
+    if (this.isStockfishPlayAsWhite) {
+      this.stockfishService.getBestMove(this.game.fen()).then(bestMove => {
+        this.makeEngineMove(bestMove);
+      });
+    }
+  }
+
+    // Retrieve available moves from Chess.js and update the array
+    updateAvailableMoves(): void {
+      this.availableMoves.next(this.game.moves()); // Retrieve all legal moves
     }
 
+    toggleBlindfold(): void {
+      this.blindfoldMode = !this.blindfoldMode;
+      this.board?.set({
+        viewOnly: this.blindfoldMode,
+        movable: { color: this.blindfoldMode ? 'none' : 'both' }
+      });
+    }
 
 
     async onMove(from: string, to: string) {
@@ -116,7 +108,22 @@ export class ChessgameComponent implements OnInit {
       const to = bestMove.slice(2, 4);
       this.game.move({ from, to });
       this.board.set({ fen: this.game.fen() });
+      this.updateAvailableMoves();
     }
+
+    // Handle move when clicked from available moves list
+  async onMoveClick(move: string): Promise<void> {
+    const moveObj = this.game.move(move); // Make the selected move
+    if (moveObj) {
+      this.board?.set({ fen: this.game.fen() });
+      this.updateAvailableMoves(); // Refresh available moves
+      const bestMove = await this.stockfishService.getBestMove(this.game.fen());
+      console.log("Best Move from Stockfish:", bestMove);
+      if (bestMove) {
+        this.makeEngineMove(bestMove);
+      }
+    }
+  }
 
     // Highlight invalid move attempt
   highlightInvalidMove(from: string, to: string): void {

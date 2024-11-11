@@ -1,0 +1,27 @@
+
+  .moves-container {
+    margin-top: 20px;
+  }
+  
+  .moves-container h3 {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .moves-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .moves-container li {
+    padding: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    margin-bottom: 4px;
+    background-color: #f8f8f8;
+  }
+  
+  .moves-container li:hover {
+    background-color: #e0e0e0;
+  }

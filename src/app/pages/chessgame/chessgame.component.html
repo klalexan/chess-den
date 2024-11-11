@@ -17,7 +17,13 @@
             <span>{{engineMove()}}</span>
         </div>
     </div> -->
-    <div class="blue merida chessboard-area">
-        <div id="board" class="chessboard"></div>
+    <div class="game-settings">
+        <button (click)="toggleBlindfold()">
+            {{ blindfoldMode ? 'Switch to Visible Mode' : 'Switch to Blindfold Mode' }}
+          </button>
+        <button (click)="createNewGame()">New Game</button>
     </div>
-</div>
+    
+
+
+

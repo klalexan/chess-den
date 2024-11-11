@@ -1,0 +1,9 @@
+<!-- Available moves section -->
+<div class="moves-container">
+    <h3>Available Moves:</h3>
+    <ul>
+      <li *ngFor="let move of availableMoves" (click)="onMoveClick(move)">
+        {{ move }}
+      </li>
+    </ul>
+  </div>
