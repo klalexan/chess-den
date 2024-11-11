@@ -30,6 +30,15 @@ export class ChessGameService {
     return chess;
   }
 
+  public move(chess: Chess, move: { from: string; to: string }): boolean {
+    try {
+      chess.move(move);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   public stop(): void {
     this.stockfishService.stop();
   }

@@ -68,3 +68,8 @@
 .button-move {
     width: 90px;
 }
+
+.square.highlight {
+    border: 2px solid red !important;
+    background-color: rgba(255, 0, 0, 0.3); /* Optional background color */
+  }

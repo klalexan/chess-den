@@ -24,10 +24,7 @@ export class ChessgameComponent implements OnInit {
   // status: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.white);
   board: any;
   // availableMoves = new BehaviorSubject<string[]>([]);
-  // fen = '8/2k5/8/8/4P3/4K3/8/8 w - - 0 1';
-  // engineMove =  signal('');
-  private isPlayerMove = true;
-
+  isStockfishPlayAsWhite: boolean = true;
 
   constructor(
     private chessGame: ChessGameService,
@@ -41,6 +38,7 @@ export class ChessgameComponent implements OnInit {
     if (boardElement) {
       this.board = Chessground(boardElement, {});
       this.board.set({
+        orientation: 'white',
         movable: {
           events: {
             after: this.onMove.bind(this)
@@ -62,6 +60,13 @@ export class ChessgameComponent implements OnInit {
         },
         fen: this.game.fen()
       });
+
+      if (this.isStockfishPlayAsWhite) {
+        this.stockfishService.getBestMove(this.game.fen()).then(bestMove => {
+          console.log("Best Move Suggested by Stockfish:", bestMove);
+          this.makeEngineMove(bestMove);
+        });
+      }
     }
       // this.status.subscribe((status: Status) => {
       //   switch (status) {
@@ -87,33 +92,46 @@ export class ChessgameComponent implements OnInit {
 
 
     async onMove(from: string, to: string) {
-      console.log('onmove');
-              if (!this.isPlayerMove) return; // Skip if it’s the engine’s move
-      this.isPlayerMove = false;
-      const move = this.game.move({ from, to });
-      if (move) {
-        console.log("Player Move:", from, to);
-      console.log("Current FEN:", this.game.fen());
+      const move = this.chessGame.move(this.game, { from, to });
+      if (!move) {
+        // Move is invalid, show an error or reset the board state
+        this.highlightInvalidMove(from, to);
+        console.log("Invalid move:", from, to);
+        this.board.set({ fen: this.game.fen() }); // Reset to the previous valid position
+        // Highlight the invalid move attempt
+        
+        
+        return;
+      }
+      
       const bestMove = await this.stockfishService.getBestMove(this.game.fen());
       console.log("Best Move from Stockfish:", bestMove);
       if (bestMove) {
         this.makeEngineMove(bestMove);
       }
-      }
-      this.isPlayerMove = true;
     }
 
     makeEngineMove(bestMove: string) {
-      this.isPlayerMove = false;
       const from = bestMove.slice(0, 2);
       const to = bestMove.slice(2, 4);
-      const move = this.game.move({ from, to });
-      console.log("Current FEN:", this.game.fen());
-      if (move) {
-        this.board.set({ fen: this.game.fen() });
-      }
-      this.isPlayerMove = true;
+      this.game.move({ from, to });
+      this.board.set({ fen: this.game.fen() });
     }
+
+    // Highlight invalid move attempt
+  highlightInvalidMove(from: string, to: string): void {
+    this.board.set({
+      highlight: {
+        squares: [from, to],
+        color: 'red'  // Red color for invalid moves
+      }
+    });
+
+    // Remove the highlights after 1 second (adjust as needed)
+    setTimeout(() => {
+      this.board.set({ highlights: { squares: [] } });
+    }, 1000);
+  }
 
     // ngOnDestroy(): void {
     //   this.stockfishService.stop();
