@@ -23,6 +23,15 @@
           </button>
         <button (click)="createNewGame()">New Game</button>
     </div>
+
+    <div class="engine-move" *ngIf="engineMove">
+        <h3>Engine Move: {{ engineMove }}</h3>
+      </div>
+
+      
+    <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" (newFen)="onMove($event)"></app-chessboard>
+    <app-available-moves *ngIf="blindfoldMode" [fen]="fen" (newFen)="onMove($event)"></app-available-moves>
+</div>
     
 
 

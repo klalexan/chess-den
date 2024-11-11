@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Chess } from 'chess.js';
-import { ChessGameService } from '../../services/chessgame.service';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChessGameService } from '../../services/chessgame.service';
 
 @Component({
   selector: 'app-available-moves',
@@ -10,27 +9,24 @@ import { CommonModule } from '@angular/common';
   templateUrl: './available-moves.component.html',
   styleUrl: './available-moves.component.scss'
 })
-export class AvailableMovesComponent {
+export class AvailableMovesComponent implements OnChanges {
 
-  private game: Chess = new Chess();
-  @Input() availableMoves: string[] = [];
-  @Output() moveMade = new EventEmitter<string[]>(); // Emit updated moves after each move
+  availableMoves: string[] = [];
 
-  constructor(private chessGame: ChessGameService) { }
+  @Input() fen: string = '';
+  @Output() newFen = new EventEmitter<string>();
 
-  ngOnInit(): void {
-    this.emitAvailableMoves();
-  }
+  constructor(private chessGame: ChessGameService){}
 
   onMoveClick(move: string): void {
-    const moveObj = this.game.move(move); // Make the move
-    if (moveObj) {
-      this.emitAvailableMoves(); // Emit updated moves
-    }
+    const game = this.chessGame.loadGameFromFen(this.fen);
+    game.move(move);
+    this.newFen.emit(game.fen());
   }
 
-  private emitAvailableMoves(): void {
-    this.moveMade.emit(this.game.moves());
+  ngOnChanges(): void {
+    const game = this.chessGame.loadGameFromFen(this.fen);
+    this.availableMoves = game.moves();
   }
 
 }

@@ -5,53 +5,12 @@
     min-height: calc(100vh - 140px);
 }
 
-.fen-area {
-    width: 70%;
-    padding-right: 1%;
-}
-
-.start-new-game {
-    width: 25%;
-}
-
-.new-game {
-    display: flex;
-    margin-top: 1%;
-    width: 70%;
-    justify-content: space-around;
-    flex-direction: row;
-}
-
-.moves-container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 5%;
-    min-height: 25vh;
-}
-
-.moves {
-    display: flex;
-    width: 50%;
-    flex-direction: row;
-    align-items: start;
-    flex-wrap: wrap;
-}
-
 .engine-move {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-
-.button-move {
-    width: 90px;
-}
-
-.square.highlight {
-    border: 2px solid red !important;
-    background-color: rgba(255, 0, 0, 0.3); /* Optional background color */
-  }
 
   button {
     margin: 5px;
@@ -65,4 +24,11 @@
   }
   button:hover {
     background-color: #005bb5;
+  }
+
+  .engine-move {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
   }

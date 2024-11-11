@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, effect, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, effect, signal } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessGameService } from '../../services/chessgame.service';
 import { Chess } from 'chess.js';
@@ -10,17 +10,16 @@ import { Chess } from 'chess.js';
   templateUrl: './chessboard.component.html',
   styleUrl: './chessboard.component.scss'
 })
-export class ChessboardComponent implements OnInit {
+export class ChessboardComponent implements OnChanges {
 
-  game: Chess;
   board: any;
-  @Output() moveMade = new EventEmitter<string[]>(); 
+  @Input() fen: string = '';
+  @Output() newFen = new EventEmitter<string>(); 
 
   constructor(private chessGame: ChessGameService) {
-      this.game = this.chessGame.newGame();
   }
 
-  ngOnInit(): void {
+  initializeBoard(): void {
     const boardElement = document.getElementById('board');
     if (boardElement) {
       this.board = Chessground(boardElement, {});
@@ -39,40 +38,40 @@ export class ChessboardComponent implements OnInit {
           enabled: true,
           visible: true,
         },
-        fen: this.game.fen()
+        fen: this.fen
       });
     }
   }
 
-  async onMove(from: string, to: string): Promise<void> {
-    const move = this.chessGame.move(this.game, { from, to });
-      if (!move) {
-        // Move is invalid, show an error or reset the board state
-        this.highlightInvalidMove(from, to);
-        console.log("Invalid move:", from, to);
-        this.board.set({ fen: this.game.fen() }); // Reset to the previous valid position
-        // Highlight the invalid move attempt
-        
-        
-        return;
-      }
-      
-      const bestMove = await this.chessGame.getBestMove(this.game.fen());
-      console.log("Best Move from Stockfish:", bestMove);
-      if (bestMove) {
-        this.makeEngineMove(bestMove);
-      }
+  ngOnChanges(): void {
+    if (this.board) {
+      this.board.set({ fen: this.fen });
+    } else {
+      this.initializeBoard();
+    }
+  }
+
+  onMove(from: string, to: string): void {
+    const game = this.chessGame.loadGameFromFen(this.fen);
+    const move = this.chessGame.move(game, { from, to });
+    if (move) {
+      this.board.set({ fen: this.fen });
+      this.newFen.emit(game.fen());
+    } else {
+      this.highlightInvalidMove(from, to);
+    }
+    
+  
   }
 
   highlightInvalidMove(from: string, to: string): void {
     this.board.set({
       highlight: {
         squares: [from, to],
-        color: 'red'  // Red color for invalid moves
+        color: 'red'  
       }
     });
 
-    // Remove the highlights after 1 second (adjust as needed)
     setTimeout(() => {
       this.board.set({ highlights: { squares: [] } });
     }, 1000);
