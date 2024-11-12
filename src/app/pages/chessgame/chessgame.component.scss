@@ -54,13 +54,13 @@ button:hover {
     margin-top: 20px;
   }
 
-  .bot-level, .play-as-black {
+  .bot-level {
     display: flex;
     align-items: center;
     gap: 10px;
   }
   
-  .bot-level label, .play-as-black label {
+  .bot-level label {
     font-size: 1em;
     color: #333;
   }

@@ -35,26 +35,15 @@ export class ChessgameComponent {
 
   async createNewGame(): Promise<void> {
     this.game = this.chessGame.newGame();
-
-    if (this.isBotPlaysAsWhite.value) {
-      const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
-      if (bestMove) {
-        this.makeEngineMove(bestMove);
-      }
-    }
+    this.fen = this.game.fen();
+    this.makeEngineMoveIfnBotTurn();
   }
 
   async loadGameFromFEN(): Promise<void> {
     if (this.inputFEN.value) {
       this.fen = this.inputFEN.value;
       this.game = this.chessGame.loadGameFromFen(this.fen);
-      const isBotTurn = this.isBotPlaysAsWhite.value && this.game.turn() === 'w' || !this.isBotPlaysAsWhite.value && this.game.turn() === 'b';
-      if (isBotTurn) {
-        const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
-        if (bestMove) {
-          this.makeEngineMove(bestMove);
-        }
-      }
+      this.makeEngineMoveIfnBotTurn();
     }
   }
 
@@ -65,10 +54,7 @@ export class ChessgameComponent {
 
   async onMove(fen: string): Promise<void> {
     this.game = this.chessGame.loadGameFromFen(fen);
-    const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
-    if (bestMove) {
-      this.makeEngineMove(bestMove);
-    }
+    this.makeEngineMoveIfnBotTurn();
   }
 
   makeEngineMove(bestMove: string) {
@@ -94,14 +80,19 @@ export class ChessgameComponent {
   };
 
   async updateBotColor(): Promise<void> {
-    const isBotTurn = this.isBotPlaysAsWhite.value && this.game.turn() === 'w' || !this.isBotPlaysAsWhite.value && this.game.turn() === 'b';
-      if (isBotTurn) {
-        const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
-        if (bestMove) {
-          this.makeEngineMove(bestMove);
-        }
-      }
+    this.makeEngineMoveIfnBotTurn();
   }
+
+  async makeEngineMoveIfnBotTurn(): Promise<void> {
+    const isBotTurn = this.isBotPlaysAsWhite.value && this.game.turn() === 'w' || !this.isBotPlaysAsWhite.value && this.game.turn() === 'b';
+    if (isBotTurn) {
+      const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
+      if (bestMove) {
+        this.makeEngineMove(bestMove);
+      }
+    }
+  }
+
 
   ngOnDestroy(): void {
     this.chessGame.stop();

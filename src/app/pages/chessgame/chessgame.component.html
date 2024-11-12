@@ -1,14 +1,6 @@
 
 <div class="chess-page">
     <div class="game-settings">
-        <div class="fen-input">
-            <input type="text" class="form-control" [formControl]="inputFEN" placeholder="Enter FEN string here" />
-            <button (click)="loadGameFromFEN()">Load Game</button>
-        </div>
-        <button (click)="toggleBlindfold()">
-            {{ blindfoldMode ? 'Switch to Visible Mode' : 'Switch to Blindfold Mode' }}
-          </button>
-        <button (click)="createNewGame()">New Game</button>
         <div class="bot-level">
             <label for="bot-level">Engine Level:</label>
             <select id="bot-level" class="form-control" [formControl]="botLevel">
@@ -17,9 +9,20 @@
               </option>
             </select>
         </div>
+        <button (click)="toggleBlindfold()">
+            {{ blindfoldMode ? 'Switch to Visible Mode' : 'Switch to Blindfold Mode' }}
+        </button>
         <div class="play-as-black">
             <mat-checkbox class="form-control"  [formControl]="isBotPlaysAsWhite" (change)="updateBotColor()">Play as Black</mat-checkbox>
+        </div>  
+        <div class="fen-input">
+            <input type="text" class="form-control" [formControl]="inputFEN" placeholder="Enter FEN string here" />
+            <button (click)="loadGameFromFEN()">Load Game</button>
         </div>
+        
+        <button (click)="createNewGame()">New Game</button>
+        
+        
     </div>
 
     <div class="engine-move">
