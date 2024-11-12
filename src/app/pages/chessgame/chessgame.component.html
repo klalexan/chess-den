@@ -30,7 +30,7 @@
     </div>
 
 
-    <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" (newFen)="onMove($event)"></app-chessboard>
+    <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (newFen)="onMove($event)"></app-chessboard>
     <app-available-moves *ngIf="blindfoldMode" [fen]="fen" (newFen)="onMove($event)"></app-available-moves>
 </div>
     

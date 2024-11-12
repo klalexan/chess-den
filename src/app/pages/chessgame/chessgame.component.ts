@@ -21,7 +21,7 @@ export class ChessgameComponent {
   blindfoldMode: boolean = false;
   isBotPlaysAsWhite = new FormControl(false);
   fen: string;
-  inputFEN = new FormControl('8/2k5/8/8/4P3/4K3/8/8 w - - 0 1');
+  inputFEN = new FormControl('8/2k2P2/8/8/4P3/4K3/8/8 w - - 0 1');
   engineMove: string = '';
   botLevel = new FormControl(1);
 
@@ -92,7 +92,6 @@ export class ChessgameComponent {
       }
     }
   }
-
 
   ngOnDestroy(): void {
     this.chessGame.stop();

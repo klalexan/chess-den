@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, effect, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Chessground } from 'chessground';
 import { ChessGameService } from '../../services/chessgame.service';
-import { Chess } from 'chess.js';
+import { CommonModule } from '@angular/common';
+import { last } from 'rxjs';
 
 @Component({
   selector: 'app-chessboard',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './chessboard.component.html',
   styleUrl: './chessboard.component.scss'
 })
@@ -14,7 +15,12 @@ export class ChessboardComponent implements OnChanges {
 
   board: any;
   @Input() fen: string = '';
-  @Output() newFen = new EventEmitter<string>(); 
+  @Input() isBotPlaysAsWhite: boolean | null = false;
+  @Output() newFen = new EventEmitter<string>();
+  
+  isPromotion: boolean = false;
+  promotionSquare: string = '';
+
 
   constructor(private chessGame: ChessGameService) {
   }
@@ -24,7 +30,11 @@ export class ChessboardComponent implements OnChanges {
     if (boardElement) {
       this.board = Chessground(boardElement, {});
       this.board.set({
-        orientation: 'white',
+        orientation: this.isBotPlaysAsWhite ? 'black' : 'white',
+        highlight: {
+          lastMove: false,
+          check: true,
+        },
         movable: {
           events: {
             after: (from: string, to: string) => this.onMove(from, to)
@@ -45,7 +55,7 @@ export class ChessboardComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.board) {
-      this.board.set({ fen: this.fen });
+      this.board.set({ fen: this.fen, orientation: this.isBotPlaysAsWhite ? 'black' : 'white', });
     } else {
       this.initializeBoard();
     }
@@ -53,6 +63,18 @@ export class ChessboardComponent implements OnChanges {
 
   onMove(from: string, to: string): void {
     const game = this.chessGame.loadGameFromFen(this.fen);
+    const moves = game.moves({ verbose: true });
+    for (const move of moves) {
+      if (move.from === from && move.to === to) {
+        this.isPromotion = move.promotion !== undefined;
+        break;
+      }
+    }
+    if (this.isPromotion) {
+      this.promotionSquare = to;
+      return;
+    }
+
     const move = this.chessGame.move(game, { from, to });
     if (move) {
       this.board.set({ fen: game.fen() });
@@ -65,17 +87,26 @@ export class ChessboardComponent implements OnChanges {
   
   }
 
+  promotePawn(piece: string): void {
+    const game = this.chessGame.loadGameFromFen(this.fen);
+    game.move(this.promotionSquare+'='+piece);
+    this.isPromotion = false;
+    this.board.set({ fen: game.fen() });
+    this.newFen.emit(game.fen());
+  }
+
   highlightInvalidMove(from: string, to: string): void {
+
+    const map = new Map([[from, 'square.highlight'], [to, 'square.invalid']]);
     this.board.set({
       highlight: {
-        squares: [from, to],
-        color: 'red'  
+        custom: map
       }
     });
 
     setTimeout(() => {
-      this.board.set({ highlights: { squares: [] } });
-    }, 1000);
+      this.board.set({ highlight: { lastMove: false, custom: new Map() } });
+    }, 200);
   }
 
 }

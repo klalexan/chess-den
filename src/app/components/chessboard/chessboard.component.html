@@ -1,3 +1,13 @@
 <div class="blue merida chessboard-area">
     <div id="board" class="chessboard"></div>
 </div>
+
+<div class="promotion-modal" *ngIf="isPromotion">
+    <h3>Choose a Piece for Promotion</h3>
+    <div class="promotion-options">
+      <button (click)="promotePawn('Q')" class="promotion-option">♕ Queen</button>
+      <button (click)="promotePawn('R')" class="promotion-option">♖ Rook</button>
+      <button (click)="promotePawn('B')" class="promotion-option">♗ Bishop</button>
+      <button (click)="promotePawn('N')" class="promotion-option">♘ Knight</button>
+    </div>
+  </div>
