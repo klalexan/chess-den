@@ -9,9 +9,9 @@ export class ChessGameService {
 
   constructor(private stockfishService: StockfishService) { }
 
-  public async getBestMove(fen: string): Promise<string> {
+  public async getBestMove(fen: string, level: number | null): Promise<string> {
 
-    const bestMove = await this.stockfishService.getBestMove(fen);
+    const bestMove = await this.stockfishService.getBestMove(fen, level || 1);
     return bestMove;
 
   }

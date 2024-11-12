@@ -9,6 +9,14 @@
             {{ blindfoldMode ? 'Switch to Visible Mode' : 'Switch to Blindfold Mode' }}
           </button>
         <button (click)="createNewGame()">New Game</button>
+        <div class="bot-level">
+            <label for="bot-level">Engine Level:</label>
+            <select id="bot-level" class="form-control" [formControl]="botLevel">
+              <option *ngFor="let level of botLevels()" [value]="level.value">
+                {{ level.label }}
+              </option>
+            </select>
+          </div>
     </div>
 
     <div class="engine-move">

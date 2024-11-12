@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Chess } from 'chess.js';
 import { CommonModule } from '@angular/common';
-import { StockfishService } from '../../services/stockfish.service';
 import { ChessGameService } from '../../services/chessgame.service';
 import { ChessboardComponent } from "../../components/chessboard/chessboard.component";
 import { AvailableMovesComponent } from "../../components/available-moves/available-moves.component";
@@ -21,22 +20,24 @@ export class ChessgameComponent {
   fen: string;
   inputFEN = new FormControl('8/2k5/8/8/4P3/4K3/8/8 w - - 0 1');
   engineMove: string = '';
+  botLevel = new FormControl(1)
 
   constructor(
     private chessGame: ChessGameService,
-    private stockfishService: StockfishService) {
+    ) {
 
       this.game = this.chessGame.newGame();
       this.fen = this.game.fen();
   }
 
-  public createNewGame(): void {
+  async createNewGame(): Promise<void> {
     this.game = this.chessGame.newGame();
 
     if (this.isBotPlaysAsWhite) {
-      this.chessGame.getBestMove(this.game.fen()).then(bestMove => {
+      const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
+      if (bestMove) {
         this.makeEngineMove(bestMove);
-      });
+      }
     }
   }
 
@@ -47,7 +48,7 @@ export class ChessgameComponent {
       this.game.turn() === 'w' ? this.isBotPlaysAsWhite = true : this.isBotPlaysAsWhite = false;
       const isBotTurn = this.isBotPlaysAsWhite && this.game.turn() === 'w' || !this.isBotPlaysAsWhite && this.game.turn() === 'b';
       if (isBotTurn) {
-        const bestMove = await this.chessGame.getBestMove(this.game.fen());
+        const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
         if (bestMove) {
           this.makeEngineMove(bestMove);
         }
@@ -62,7 +63,7 @@ export class ChessgameComponent {
 
   async onMove(fen: string): Promise<void> {
     this.game = this.chessGame.loadGameFromFen(fen);
-    const bestMove = await this.chessGame.getBestMove(this.game.fen());
+    const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
     console.log("Best Move from Stockfish:", bestMove);
     if (bestMove) {
       this.makeEngineMove(bestMove);
@@ -72,10 +73,24 @@ export class ChessgameComponent {
   makeEngineMove(bestMove: string) {
     const from = bestMove.slice(0, 2);
     const to = bestMove.slice(2, 4);
-    const move = this.game.move({ from, to });
+    const promotion = bestMove.length === 5 ? bestMove.substring(4,5): '';
+    const move = this.game.move({ from, to, promotion });
     this.engineMove = move.san;
     this.fen = this.game.fen();
   }
+
+  botLevels () {
+    var values = [];
+    const numLevels = 20;
+    const minElo = 1100;
+    const maxElo = 3100;
+    for (var i = 0; i <= numLevels; i++) {
+      const elo =
+        Math.floor((minElo + (maxElo - minElo) * (i / numLevels)) / 100) * 100;
+      values.push({ value: i, label: elo });
+    }
+    return values;
+  };
 
   ngOnDestroy(): void {
     this.chessGame.stop();

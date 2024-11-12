@@ -26,7 +26,7 @@ export class StockfishService {
     }
   }
 
-  getBestMove(fen: string): Promise<string> {
+  getBestMove(fen: string, level: number): Promise<string> {
     return new Promise((resolve) => {
       if (!this.stockfish) return;
 
@@ -38,9 +38,10 @@ export class StockfishService {
       };
 
       // Send commands to Stockfish
-      this.sendCommand("uci");             // Initialize UCI mode
+      // this.sendCommand("uci");             // Initialize UCI mode
       this.sendCommand(`position fen ${fen}`);
-      this.sendCommand("go depth 10");     // Set analysis depth
+      this.sendCommand("setoption name Skill Level value " + level); // Set bot level
+      this.sendCommand("go depth 1");     // Set analysis depth
     })
   }
 
