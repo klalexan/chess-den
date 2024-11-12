@@ -16,7 +16,10 @@
                 {{ level.label }}
               </option>
             </select>
-          </div>
+        </div>
+        <div class="play-as-black">
+            <mat-checkbox class="form-control"  [formControl]="isBotPlaysAsWhite" (change)="updateBotColor()">Play as Black</mat-checkbox>
+        </div>
     </div>
 
     <div class="engine-move">

@@ -53,3 +53,28 @@ button:hover {
     flex-direction: row;
     margin-top: 20px;
   }
+
+  .bot-level, .play-as-black {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .bot-level label, .play-as-black label {
+    font-size: 1em;
+    color: #333;
+  }
+  
+  .bot-level select {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .bot-level select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }

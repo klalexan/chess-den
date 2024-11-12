@@ -5,10 +5,13 @@ import { ChessGameService } from '../../services/chessgame.service';
 import { ChessboardComponent } from "../../components/chessboard/chessboard.component";
 import { AvailableMovesComponent } from "../../components/available-moves/available-moves.component";
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chessgame',
-  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule],
+  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule, MatCheckboxModule, MatSelectModule],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
@@ -16,11 +19,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class ChessgameComponent {
   game: Chess;
   blindfoldMode: boolean = false;
-  isBotPlaysAsWhite: boolean = true;
+  isBotPlaysAsWhite = new FormControl(false);
   fen: string;
   inputFEN = new FormControl('8/2k5/8/8/4P3/4K3/8/8 w - - 0 1');
   engineMove: string = '';
-  botLevel = new FormControl(1)
+  botLevel = new FormControl(1);
 
   constructor(
     private chessGame: ChessGameService,
@@ -33,7 +36,7 @@ export class ChessgameComponent {
   async createNewGame(): Promise<void> {
     this.game = this.chessGame.newGame();
 
-    if (this.isBotPlaysAsWhite) {
+    if (this.isBotPlaysAsWhite.value) {
       const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
       if (bestMove) {
         this.makeEngineMove(bestMove);
@@ -45,8 +48,7 @@ export class ChessgameComponent {
     if (this.inputFEN.value) {
       this.fen = this.inputFEN.value;
       this.game = this.chessGame.loadGameFromFen(this.fen);
-      this.game.turn() === 'w' ? this.isBotPlaysAsWhite = true : this.isBotPlaysAsWhite = false;
-      const isBotTurn = this.isBotPlaysAsWhite && this.game.turn() === 'w' || !this.isBotPlaysAsWhite && this.game.turn() === 'b';
+      const isBotTurn = this.isBotPlaysAsWhite.value && this.game.turn() === 'w' || !this.isBotPlaysAsWhite.value && this.game.turn() === 'b';
       if (isBotTurn) {
         const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
         if (bestMove) {
@@ -64,7 +66,6 @@ export class ChessgameComponent {
   async onMove(fen: string): Promise<void> {
     this.game = this.chessGame.loadGameFromFen(fen);
     const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
-    console.log("Best Move from Stockfish:", bestMove);
     if (bestMove) {
       this.makeEngineMove(bestMove);
     }
@@ -91,6 +92,16 @@ export class ChessgameComponent {
     }
     return values;
   };
+
+  async updateBotColor(): Promise<void> {
+    const isBotTurn = this.isBotPlaysAsWhite.value && this.game.turn() === 'w' || !this.isBotPlaysAsWhite.value && this.game.turn() === 'b';
+      if (isBotTurn) {
+        const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
+        if (bestMove) {
+          this.makeEngineMove(bestMove);
+        }
+      }
+  }
 
   ngOnDestroy(): void {
     this.chessGame.stop();
