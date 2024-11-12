@@ -1,6 +1,10 @@
 
 <div class="chess-page">
     <div class="game-settings">
+        <div class="fen-input">
+            <input type="text" class="form-control" [formControl]="inputFEN" placeholder="Enter FEN string here" />
+            <button (click)="loadGameFromFEN()">Load Game</button>
+        </div>
         <button (click)="toggleBlindfold()">
             {{ blindfoldMode ? 'Switch to Visible Mode' : 'Switch to Blindfold Mode' }}
           </button>

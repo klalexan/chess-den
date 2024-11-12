@@ -29,3 +29,27 @@ button:hover {
     justify-content: center;
     align-items: center;
 }
+
+.fen-input {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .fen-input input {
+    padding: 5px;
+    width: 300px;
+    margin-right: 5px;
+  }
+  
+  .fen-input button {
+    padding: 5px 10px;
+  }
+
+  .game-settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 20px;
+  }

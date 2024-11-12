@@ -5,20 +5,21 @@ import { StockfishService } from '../../services/stockfish.service';
 import { ChessGameService } from '../../services/chessgame.service';
 import { ChessboardComponent } from "../../components/chessboard/chessboard.component";
 import { AvailableMovesComponent } from "../../components/available-moves/available-moves.component";
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-chessgame',
-  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent],
+  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
 })
 export class ChessgameComponent {
   game: Chess;
-  availableMoves: string[];
   blindfoldMode: boolean = false;
   isBotPlaysAsWhite: boolean = true;
   fen: string;
+  inputFEN = new FormControl('8/2k5/8/8/4P3/4K3/8/8 w - - 0 1');
   engineMove: string = '';
 
   constructor(
@@ -26,15 +27,9 @@ export class ChessgameComponent {
     private stockfishService: StockfishService) {
 
       this.game = this.chessGame.newGame();
-      this.availableMoves = this.game.moves();
       this.fen = this.game.fen();
-   }
-
-  ngOnInit(): void {
-    
   }
 
-      // Create game on Lichess
   public createNewGame(): void {
     this.game = this.chessGame.newGame();
 
@@ -45,6 +40,21 @@ export class ChessgameComponent {
     }
   }
 
+  async loadGameFromFEN(): Promise<void> {
+    if (this.inputFEN.value) {
+      this.fen = this.inputFEN.value;
+      this.game = this.chessGame.loadGameFromFen(this.fen);
+      this.game.turn() === 'w' ? this.isBotPlaysAsWhite = true : this.isBotPlaysAsWhite = false;
+      const isBotTurn = this.isBotPlaysAsWhite && this.game.turn() === 'w' || !this.isBotPlaysAsWhite && this.game.turn() === 'b';
+      if (isBotTurn) {
+        const bestMove = await this.chessGame.getBestMove(this.game.fen());
+        if (bestMove) {
+          this.makeEngineMove(bestMove);
+        }
+      }
+    }
+  }
+
   toggleBlindfold(): void {
     this.blindfoldMode = !this.blindfoldMode;
   }
@@ -52,7 +62,7 @@ export class ChessgameComponent {
 
   async onMove(fen: string): Promise<void> {
     this.game = this.chessGame.loadGameFromFen(fen);
-    const bestMove = await this.stockfishService.getBestMove(this.game.fen());
+    const bestMove = await this.chessGame.getBestMove(this.game.fen());
     console.log("Best Move from Stockfish:", bestMove);
     if (bestMove) {
       this.makeEngineMove(bestMove);
@@ -68,7 +78,7 @@ export class ChessgameComponent {
   }
 
   ngOnDestroy(): void {
-    this.stockfishService.stop();
+    this.chessGame.stop();
   }
 }
 
