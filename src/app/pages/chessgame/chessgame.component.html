@@ -29,20 +29,22 @@
         <h3>Engine Move: {{ engineMove }}</h3>
     </div>
 
-
-    <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (move)="onMove($event)"></app-chessboard>
-    <app-available-moves *ngIf="blindfoldMode" [fen]="fen" (move)="onMove($event)"></app-available-moves>
-
-    <div class="move-history">
-        <h3>Move History</h3>
-        <div class="history-list">
-          <div class="history-item" *ngFor="let entry of moveHistory; let i = index">
-            <span class="move-number">{{ i + 1 }}.</span>
-            <span class="move white">{{ entry.white }}</span>
-            <span class="move black">{{ entry.black }}</span>
+    <div class="chess-content">
+        <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (move)="onMove($event)"></app-chessboard>
+        <app-available-moves *ngIf="blindfoldMode" [fen]="fen" (move)="onMove($event)"></app-available-moves>
+    
+        <div class="move-history">
+            <h3>Move History</h3>
+            <div class="history-list">
+              <div class="history-item" *ngFor="let entry of moveHistory; let i = index">
+                <span class="move-number">{{ i + 1 }}.</span>
+                <span class="move white">{{ entry.white }}</span>
+                <span class="move black">{{ entry.black }}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+    </div>
+    
 </div>
     
 
