@@ -1,9 +1,12 @@
-<!-- Available moves section -->
-<div class="moves-container">
-    <h3>Available Moves:</h3>
-    <ul>
-      <li *ngFor="let move of availableMoves" (click)="onMoveClick(move)">
-        {{ move }}
-      </li>
-    </ul>
+<div class="available-moves">
+  <h3>Available Moves</h3>
+  <div class="moves-grid">
+    <button
+      *ngFor="let move of availableMoves"
+      class="move-button"
+      (click)="onMoveClick(move)"
+    >
+      {{ move }}
+    </button>
   </div>
+</div>
