@@ -16,7 +16,7 @@ export class ChessboardComponent implements OnChanges {
   board: any;
   @Input() fen: string = '';
   @Input() isBotPlaysAsWhite: boolean | null = false;
-  @Output() newFen = new EventEmitter<string>();
+  @Output() move = new EventEmitter<string>();
   
   isPromotion: boolean = false;
   promotionSquare: string = '';
@@ -64,27 +64,20 @@ export class ChessboardComponent implements OnChanges {
   onMove(from: string, to: string): void {
     const game = this.chessGame.loadGameFromFen(this.fen);
     const moves = game.moves({ verbose: true });
-    for (const move of moves) {
-      if (move.from === from && move.to === to) {
-        this.isPromotion = move.promotion !== undefined;
-        break;
-      }
-    }
-    if (this.isPromotion) {
-      this.promotionSquare = to;
+    const move = moves.find(m => m.from === from && m.to === to);
+
+    if (!move) {
+      this.board.set({ fen: this.fen });
+      this.highlightInvalidMove(from, to);
       return;
     }
 
-    const move = this.chessGame.move(game, { from, to });
-    if (move) {
-      this.board.set({ fen: game.fen() });
-      this.newFen.emit(game.fen());
-    } else {
-      this.board.set({ fen: this.fen });
-      this.highlightInvalidMove(from, to);
+    if (move.promotion) {
+      this.isPromotion = true;
+      this.promotionSquare = to;
+      return;
     }
-    
-  
+    this.move.emit(move.san);
   }
 
   promotePawn(piece: string): void {
@@ -92,7 +85,7 @@ export class ChessboardComponent implements OnChanges {
     game.move(this.promotionSquare+'='+piece);
     this.isPromotion = false;
     this.board.set({ fen: game.fen() });
-    this.newFen.emit(game.fen());
+    this.move.emit(game.fen());
   }
 
   highlightInvalidMove(from: string, to: string): void {

@@ -52,8 +52,8 @@ export class ChessgameComponent {
   }
 
 
-  async onMove(fen: string): Promise<void> {
-    this.game = this.chessGame.loadGameFromFen(fen);
+  async onMove(move: string): Promise<void> {
+    this.game.move(move);
     this.makeEngineMoveIfnBotTurn();
   }
 
@@ -91,6 +91,17 @@ export class ChessgameComponent {
         this.makeEngineMove(bestMove);
       }
     }
+  }
+
+  get moveHistory(): { white: string, black: string }[] {
+    const history = this.game.history({verbose: true});
+    const pairedMoves = [];
+    for (let i = 0; i < history.length; i += 2) {
+      pairedMoves.push({white: history[i] ? history[i].san : '', black: history[i + 1] ? history[i + 1].san : ''});
+    }
+
+    return pairedMoves;
+
   }
 
   ngOnDestroy(): void {

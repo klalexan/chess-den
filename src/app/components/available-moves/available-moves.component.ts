@@ -14,14 +14,12 @@ export class AvailableMovesComponent implements OnChanges {
   availableMoves: string[] = [];
 
   @Input() fen: string = '';
-  @Output() newFen = new EventEmitter<string>();
+  @Output() move = new EventEmitter<string>();
 
   constructor(private chessGame: ChessGameService){}
 
   onMoveClick(move: string): void {
-    const game = this.chessGame.loadGameFromFen(this.fen);
-    game.move(move);
-    this.newFen.emit(game.fen());
+    this.move.emit(move);
   }
 
   ngOnChanges(): void {
