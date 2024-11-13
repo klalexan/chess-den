@@ -4,13 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Chessground } from 'chessground';
 import { ChessGameService } from '../../services/chessgame.service';
 import { CommonModule } from '@angular/common';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import { ChessPromotionDialogComponent } from '../chess-promotion-dialog/chess-promotion-dialog.component';
 
 @Component({
@@ -26,8 +20,6 @@ export class ChessboardComponent implements OnChanges {
   @Input() fen: string = '';
   @Input() isBotPlaysAsWhite: boolean | null = false;
   @Output() move = new EventEmitter<string>();
-  
-  promotionPosition: { x: number, y: number } = { x: 0, y: 0 };
 
 
   constructor(private chessGame: ChessGameService) {
@@ -81,7 +73,22 @@ export class ChessboardComponent implements OnChanges {
     }
 
     if (move.promotion) {
-      this.board.set({ fen: this.fen });
+      this.board.set({ 
+        drawable: {
+          shapes: [
+            {
+              orig: 'a2',
+              dest: 'a3',
+              brush: 'green',
+          }],
+          autoShapes: [
+            {
+              orig: move.from,
+              dest: move.to,
+              brush: 'green',
+          }]
+        },
+     });
       this.openPromotionDialog(move.color, move.to);
       return;
     }
@@ -96,51 +103,49 @@ export class ChessboardComponent implements OnChanges {
     });
 
     dialog.afterClosed().subscribe((piece: string) => {
-      const game = this.chessGame.loadGameFromFen(this.fen);
+      this.board.set({ 
+        drawable: {
+          autoShapes: []
+        },
+     });
       this.move.emit(dest+'='+piece);
-    }
-  );  
-  }
-
-  getSquareCoordinates(square: string): { x: number, y: number } {
-    const boardElement = document.getElementById('board');
-  
-    if (!boardElement) {
-      return { x: 0, y: 0 }; // Default if board is not found
-    }
-  
-    const boardSize = boardElement.offsetWidth;
-    const squareSize = boardSize / 8;
-  
-    // Parse the square notation (e.g., 'e4' -> file 'e' and rank '4')
-    const file = square[0];
-    const rank = square[1];
-  
-    // Convert file to column index (0 for 'a', 7 for 'h')
-    const fileIndex = file.charCodeAt(0) - 'a'.charCodeAt(0);
-  
-    // Convert rank to row index (0 for '8', 7 for '1' in standard chess notation)
-    const rankIndex = 8 - parseInt(rank);
-  
-    // Calculate x and y position based on the square index
-    const x = fileIndex * squareSize;
-    const y = rankIndex * squareSize;
-  
-    return { x, y };
+    });  
   }
 
   highlightInvalidMove(from: string, to: string): void {
+    
+    this.board.set({ drawable: { autoShapes: [
+      // {
+      //   orig: from,
+      //   dest: from,
+      //   customSvg: {
+      //     html: '<square cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />',
+      //     center: 'dest',
+      //   }
+        
+      // },
+      // {
+      //   orig: from,
+      //   dest: to,
+      //   customSvg: {
+      //     html: '<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />',
+      //     center: 'dest',
+      //   }
+        
+      // },
 
-    const map = new Map([[from, 'highlight'], [to, 'highlight']]);
-    this.board.set({
-      highlight: {
-        custom: map
-      }
-    });
+      {
+        orig: from,
+        dest: to,
+        brush: 'red',
+    }
+    ] }});
+    
+
 
     setTimeout(() => {
-      this.board.set({ highlight: { lastMove: false, custom: new Map() } });
-    }, 200);
+      this.board.set({ drawable: { autoShapes: [] }});
+    }, 1000);
   }
 
 }
