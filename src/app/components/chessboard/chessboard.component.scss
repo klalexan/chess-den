@@ -8,8 +8,8 @@
 }
 
 .chessboard {
-    width: 600px;
-    height: 600px;
+    width: 400px;
+    height: 400px;
 }
 
 .chessboard-area {
@@ -20,6 +20,6 @@
     margin-top: 2%;
 }
 
-.square.highlight {
+.highlight {
     background-color: rgba(255, 0, 0, 0.3); /* Optional background color */
   }
