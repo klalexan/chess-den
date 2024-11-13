@@ -1,8 +1,8 @@
 <mat-dialog-content>
-    <div class="svg-container">
-        <button [mat-dialog-close]="'Q'"><img [src]="getSvgPath('Q')" alt="Icon" class="svg-image promotion-option" /></button>
-        <button (click)="close('B')" ><img [src]="getSvgPath('B')" alt="Icon" class="svg-image promotion-option" /></button>
-        <button (click)="close('R')"><img [src]="getSvgPath('R')" alt="Icon" class="svg-image promotion-option" /></button>
-        <button (click)="close('N')"><img [src]="getSvgPath('N')" alt="Icon" class="svg-image promotion-option" /></button>
-    </div>
+    <!-- <div class="svg-container"> -->
+        <div (click)="close('Q')"><img [src]="getSvgPath('Q')" alt="Icon" class="svg-image promotion-option" /></div>
+        <div (click)="close('B')" ><img [src]="getSvgPath('B')" alt="Icon" class="svg-image promotion-option" /></div>
+        <div (click)="close('R')"><img [src]="getSvgPath('R')" alt="Icon" class="svg-image promotion-option" /></div>
+        <div (click)="close('N')"><img [src]="getSvgPath('N')" alt="Icon" class="svg-image promotion-option" /></div>
+    <!-- </div> -->
 </mat-dialog-content>

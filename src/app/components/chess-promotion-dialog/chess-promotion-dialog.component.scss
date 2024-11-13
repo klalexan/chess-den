@@ -3,9 +3,7 @@
 mat-dialog-content {
     display: flex;
     flex-direction: column;
-    width: 150px;
-    height: 500px;
-    gap: 10px;
+    
     background-color: rgba(255, 255, 255, 0.95);
     padding: 10px;
     border-radius: 8px;
@@ -14,9 +12,11 @@ mat-dialog-content {
   }
   
   .promotion-option {
-    font-size: 24px;
+    width: 100px;
     color: #333;
     background-color: transparent;
+    display: flex;
+    align-items: center;
     border: none;
     cursor: pointer;
     transition: transform 0.1s, color 0.1s;
@@ -30,18 +30,4 @@ mat-dialog-content {
   .promotion-option:active {
     transform: scale(1);
     color: #0056b3;
-  }
-
-  .svg-container {
-    width: 100px;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .svg-image {
-    width: 100%;
-    height: 100%;
   }
