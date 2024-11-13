@@ -1,3 +1,4 @@
+@import '../../../assets/chess.scss';
 
 .chessboard-container {
     display: flex;
@@ -8,8 +9,8 @@
 }
 
 .chessboard {
-    width: 600px;
-    height: 600px;
+    width: $chessboard-width;
+    height: $chessboard-width;
 }
 
 .chessboard-area {

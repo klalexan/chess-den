@@ -1,4 +1,4 @@
-
+@import '../../../assets/chess.scss';
 
 mat-dialog-content {
     display: flex;
@@ -12,7 +12,7 @@ mat-dialog-content {
   }
   
   .promotion-option {
-    width: 100px;
+    width: $chessboard-width / 8;
     color: #333;
     background-color: transparent;
     display: flex;
