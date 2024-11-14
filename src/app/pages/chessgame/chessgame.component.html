@@ -17,9 +17,13 @@
         </div>  
         <div class="fen-input">
             <input type="text" class="form-control" [formControl]="inputFEN" placeholder="Enter FEN string here" />
-            <button (click)="loadGameFromFEN()">Load Game</button>
+            <button (click)="loadGameFromFEN()">Load FEN</button>
         </div>
-        
+
+        <div class="fen-input">
+          <button (click)="loadSavedGame()">Continue Game</button>
+        </div>
+
         <button (click)="createNewGame()">New Game</button>
         
         

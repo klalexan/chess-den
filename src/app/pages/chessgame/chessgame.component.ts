@@ -7,6 +7,8 @@ import { AvailableMovesComponent } from "../../components/available-moves/availa
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { Save } from '../../models/chess/save.model';
 
 @Component({
   selector: 'app-chessgame',
@@ -26,6 +28,7 @@ export class ChessgameComponent {
 
   constructor(
     private chessGame: ChessGameService,
+    private localStorageService: LocalStorageService
     ) {
 
       this.game = this.chessGame.newGame();
@@ -50,6 +53,7 @@ export class ChessgameComponent {
     this.game.undo();
     this.game.undo();
     this.fen = this.game.fen();
+    this.saveGame();
     this.engineMove = '';
   }
 
@@ -73,8 +77,10 @@ export class ChessgameComponent {
 
   async onMove(move: string): Promise<void> {
     this.game.move(move);
+    this.saveGame();
     if (this.game.isGameOver()) {
       this.engineMove = '';
+      return;
     }
     setTimeout(() => {
       this.makeEngineMoveIfnBotTurn();
@@ -95,6 +101,7 @@ export class ChessgameComponent {
 
   async updateBotColor(): Promise<void> {
     this.makeEngineMoveIfnBotTurn();
+    this.saveGame();
   }
 
   async makeEngineMoveIfnBotTurn(): Promise<void> {
@@ -103,6 +110,7 @@ export class ChessgameComponent {
       const bestMove = await this.chessGame.getBestMove(this.game.fen(), this.botLevel.value);
       if (bestMove) {
         this.makeEngineMove(bestMove);
+        this.saveGame();
       }
     }
   }
@@ -116,6 +124,24 @@ export class ChessgameComponent {
 
     return pairedMoves;
 
+  }
+
+  saveGame(): void {
+    this.localStorageService.setItem('chessGame', {
+      fen: this.game.fen(),
+      history: this.game.history({verbose: true}),
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  loadSavedGame(): void {
+    const save: Save = this.localStorageService.getItem('chessGame');
+
+    if (save.fen) {
+      this.game = this.chessGame.newGame();
+      save.history?.forEach(move => this.game.move(move));
+      this.fen = this.game.fen();
+    }
   }
 
   ngOnDestroy(): void {
