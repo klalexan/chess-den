@@ -1,3 +1,29 @@
+<div class="board-editor">
+    <div class="spare spare-buttom spare-white">
+        <div class="no-square pointer">
+            <div class="piece" data-role="king" data-color="black" (click)="dragNewPiece({role: 'queen', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="queen" data-color="black" (click)="dragNewPiece({role: 'queen', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="rook" data-color="black" (click)="dragNewPiece({role: 'king', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="bishop" data-color="black" (click)="dragNewPiece({role: 'king', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="night" data-color="black" (click)="dragNewPiece({role: 'king', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="pown" data-color="black" (click)="dragNewPiece({role: 'king', color: 'black'}, $event)"></div>
+        </div>
+    </div>
+    
+</div>
 <div class="blue merida chessboard-area">
     <div id="board" class="chessboard"></div>
+</div>
+<div class="board-editor">
+    <div class="spare spare-buttom spare-white">
+        <div class="no-square pointer">
+            <div class="piece" data-role="king" data-color="white" (click)="dragNewPiece({role: 'queen', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="queen" data-color="white" (click)="dragNewPiece({role: 'queen', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="rook" data-color="white" (click)="dragNewPiece({role: 'king', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="bishop" data-color="white" (click)="dragNewPiece({role: 'king', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="night" data-color="white" (click)="dragNewPiece({role: 'king', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="pown" data-color="white" (click)="dragNewPiece({role: 'king', color: 'white'}, $event)"></div>
+        </div>
+    </div>
+    
 </div>

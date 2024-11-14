@@ -7,7 +7,6 @@ import { AvailableMovesComponent } from "../../components/available-moves/availa
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chessgame',
@@ -47,23 +46,15 @@ export class ChessgameComponent {
     }
   }
 
+  undoMove() {
+    this.game.undo();
+    this.game.undo();
+    this.fen = this.game.fen();
+    this.engineMove = '';
+  }
+
   toggleBlindfold(): void {
     this.blindfoldMode = !this.blindfoldMode;
-  }
-
-
-  async onMove(move: string): Promise<void> {
-    this.game.move(move);
-    this.makeEngineMoveIfnBotTurn();
-  }
-
-  makeEngineMove(bestMove: string) {
-    const from = bestMove.slice(0, 2);
-    const to = bestMove.slice(2, 4);
-    const promotion = bestMove.length === 5 ? bestMove.substring(4,5): '';
-    const move = this.game.move({ from, to, promotion });
-    this.engineMove = move.san;
-    this.fen = this.game.fen();
   }
 
   botLevels () {
@@ -78,6 +69,29 @@ export class ChessgameComponent {
     }
     return values;
   };
+
+
+  async onMove(move: string): Promise<void> {
+    this.game.move(move);
+    if (this.game.isGameOver()) {
+      this.engineMove = '';
+    }
+    setTimeout(() => {
+      this.makeEngineMoveIfnBotTurn();
+    }, 1000);
+    
+  }
+
+  makeEngineMove(bestMove: string) {
+    const from = bestMove.slice(0, 2);
+    const to = bestMove.slice(2, 4);
+    const promotion = bestMove.length === 5 ? bestMove.substring(4,5): '';
+    const move = this.game.move({ from, to, promotion });
+    this.engineMove = move.san;
+    this.fen = this.game.fen();
+  }
+
+
 
   async updateBotColor(): Promise<void> {
     this.makeEngineMoveIfnBotTurn();

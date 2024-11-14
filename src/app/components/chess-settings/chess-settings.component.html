@@ -1,1 +1,24 @@
-<p>chess-settings works!</p>
+<!-- <div class="game-settings">
+    <div class="bot-level">
+        <label for="bot-level">Engine Level:</label>
+        <select id="bot-level" (change)="botLevel.emit($event)">
+          <option *ngFor="let level of botLevels()" [value]="level.value">
+            {{ level.label }}
+          </option>
+        </select>
+    </div>
+    <button (click)="blindfoldMode.emit()">
+        {{ blindfoldMode ? 'Switch to Visible Mode' : 'Switch to Blindfold Mode' }}
+    </button>
+    <div class="play-as-black">
+        <mat-checkbox   (change)="isBotPlaysAsWhite.emit()">Play as Black</mat-checkbox>
+    </div>  
+    <div class="fen-input">
+        <input type="text" class="form-control" [formControl]="inputFEN" placeholder="Enter FEN string here" />
+        <button (click)="loadGameFromFEN()">Load Game</button>
+    </div>
+    
+    <button (click)="createNewGame()">New Game</button>
+    
+    
+</div> -->

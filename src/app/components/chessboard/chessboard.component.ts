@@ -6,6 +6,7 @@ import { ChessGameService } from '../../services/chessgame.service';
 import { CommonModule } from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import { ChessPromotionDialogComponent } from '../chess-promotion-dialog/chess-promotion-dialog.component';
+import { Key, MoveMetadata, Piece, Role } from 'chessground/types';
 
 @Component({
   selector: 'app-chessboard',
@@ -39,7 +40,26 @@ export class ChessboardComponent implements OnChanges {
           events: {
             after: (from: string, to: string) => this.onMove(from, to)
           },
+          afterNewPiece: (role: Role, key: Key, metadata: MoveMetadata) => {
+            console.log('dropNewPiece', role, key);
+          },
           color: 'both',
+          showDests: true,
+        },
+        events: {
+          dropNewPiece: (piece: Piece, key: Key) => {
+            console.log('dropNewPiece', piece, key);
+          },
+          insert: (elements: any) => {
+            console.log('insert', elements);
+          },
+          select: (key: Key) => {
+            console.log('select', key);
+          },
+        },
+        premovable: {
+          enabled: true,
+          showDests: true,
         },
         draggable: {
           enabled: true,
@@ -75,12 +95,6 @@ export class ChessboardComponent implements OnChanges {
     if (move.promotion) {
       this.board.set({ 
         drawable: {
-          shapes: [
-            {
-              orig: 'a2',
-              dest: 'a3',
-              brush: 'green',
-          }],
           autoShapes: [
             {
               orig: move.from,
@@ -124,15 +138,15 @@ export class ChessboardComponent implements OnChanges {
       //   }
         
       // },
-      // {
-      //   orig: from,
-      //   dest: to,
-      //   customSvg: {
-      //     html: '<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />',
-      //     center: 'dest',
-      //   }
+      {
+        orig: from,
+        dest: to,
+        customSvg: {
+          html: '<svg width="80" height="80" viewBox="0 0 24 24" fill="#882020" stroke="#882020" stroke-width="3" opacity="0.7" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="20" y2="20" /><line x1="20" y1="4" x2="4" y2="20" /></svg>',
+          center: 'dest',
+        }
         
-      // },
+      },
 
       {
         orig: from,
@@ -146,6 +160,10 @@ export class ChessboardComponent implements OnChanges {
     setTimeout(() => {
       this.board.set({ drawable: { autoShapes: [] }});
     }, 1000);
+  }
+
+  dragNewPiece(piece: Piece, event: Event): void {
+    this.board.dragNewPiece(piece, event);
   }
 
 }
