@@ -54,7 +54,7 @@ export class ChessboardComponent implements OnChanges {
             console.log('insert', elements);
           },
           select: (key: Key) => {
-            console.log('select', key);
+            // console.log('select', key);
           },
         },
         premovable: {
@@ -63,6 +63,7 @@ export class ChessboardComponent implements OnChanges {
         },
         draggable: {
           enabled: true,
+          showGhost: true,
         },
         drawable: {
           enabled: true,

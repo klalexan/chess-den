@@ -27,6 +27,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
+              "src/queen.svg",
               "src/assets"
             ],
             "styles": [
