@@ -1,14 +1,13 @@
 $chessboard-width: 25vw;
 
-  
-@media (min-width: 601px) and (max-width: 2048px) {
+@media (min-width: 100px) and (max-width: 2559px) {
 
-    $chessboard-width: 70vw;
+    $chessboard-width: 50vw;
+
 
 }
-  
-//   @media (min-width: 1025px) {
-    
-//       $chessboard-width: 50vw;
-    
-//   }
+
+@media (min-width: 2600px) {
+    $chessboard-width: 20vw;
+}
+

@@ -27,6 +27,10 @@
     background-size: cover;
     display: inline-block;
   }
+
+.piece:hover {
+    cursor: pointer;
+}  
   
 /* White pieces */
 .piece[data-color="white"][data-role="queen"] {
@@ -81,3 +85,16 @@
 .piece[data-color="black"][data-role="pawn"] {
     background-image: url('../../../assets/images/pieces/merida/bP.svg');
 }
+
+.piece[data-role="trash"] {
+    background-image: url('../../../assets/images/trash.svg');
+}
+
+.spare {
+    display: flex;
+    flex-direction: row;
+    // justify-content: space-around;
+    align-items: center;
+    margin-top: 2%;
+}
+
