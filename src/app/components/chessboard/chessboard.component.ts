@@ -20,7 +20,7 @@ export class ChessboardComponent implements OnChanges {
   @Input() fen: string = '';
   @Input() isBotPlaysAsWhite: boolean | null = false;
   @Output() move = new EventEmitter<string>();
-  @Output() clear = new EventEmitter<void>();
+  @Output() clear = new EventEmitter<string>();
   @Output() piece = new EventEmitter<{pieceSymbol: string, color: string, key: string}>();
 
   constructor(private chessGame: ChessGameService) {

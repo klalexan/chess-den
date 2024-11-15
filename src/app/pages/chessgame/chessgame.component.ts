@@ -9,7 +9,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Save } from '../../models/chess/save.model';
-import { Key, MoveMetadata, Piece, Role } from 'chessground/types';
 
 @Component({
   selector: 'app-chessgame',
@@ -150,8 +149,16 @@ export class ChessgameComponent {
     this.fen = this.game.fen();
   }
 
-  clearBoard(): void {
-    this.game.clear();
+  clearBoard(color: string): void {
+    const brd = this.game.board();
+    brd.forEach((row, rowIndex) => {
+      row.forEach((piece, colIndex) => {
+        if (piece?.color === color) {
+          const obj = brd[rowIndex][colIndex]; 
+          this.game.remove(obj?.square as Square);
+        }
+      });
+    });
     this.fen = this.game.fen();
   }
 

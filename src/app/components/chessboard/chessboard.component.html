@@ -8,7 +8,7 @@
             <div class="piece" data-role="knight" data-color="black" (mousedown)="dragNewPiece({role: 'knight', color: 'black'}, $event)"></div>
             <div class="piece" data-role="pawn" data-color="black" (mousedown)="dragNewPiece({role: 'pawn', color: 'black'}, $event)"></div>
             <div class="piece" ></div>
-            <div class="piece" data-role="trash" (click)="clear.emit()"></div>
+            <div class="piece" data-role="trash" (click)="clear.emit('b')"></div>
         </div>
     </div>
     
@@ -26,7 +26,7 @@
             <div class="piece" data-role="knight" data-color="white" (mousedown)="dragNewPiece({role: 'knight', color: 'white'}, $event)"></div>
             <div class="piece" data-role="pawn" data-color="white" (mousedown)="dragNewPiece({role: 'pawn', color: 'white'}, $event)"></div>
             <div class="piece" ></div>
-            <div class="piece" data-role="trash" (click)="clear.emit()"></div>
+            <div class="piece" data-role="trash" (click)="clear.emit('w')"></div>
         </div>
     </div>
     
