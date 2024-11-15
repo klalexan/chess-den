@@ -42,7 +42,7 @@
     background-image: url('../../../assets/images/pieces/merida/wB.svg');
 }
 
-.piece[data-color="white"][data-role="night"] {
+.piece[data-color="white"][data-role="knight"] {
     background-image: url('../../../assets/images/pieces/merida/wN.svg');
 }
 
@@ -51,7 +51,7 @@
     background-image: url('../../../assets/images/pieces/merida/wR.svg');
 }
 
-.piece[data-color="white"][data-role="pown"] {
+.piece[data-color="white"][data-role="pawn"] {
     background-image: url('../../../assets/images/pieces/merida/wP.svg');
 }
 
@@ -69,7 +69,7 @@
     background-image: url('../../../assets/images/pieces/merida/bP.svg');
 }
 
-.piece[data-color="black"][data-role="night"] {
+.piece[data-color="black"][data-role="knight"] {
     background-image: url('../../../assets/images/pieces/merida/bN.svg');
 }
 
@@ -78,6 +78,6 @@
     background-image: url('../../../assets/images/pieces/merida/bR.svg');
 }
 
-.piece[data-color="black"][data-role="pown"] {
+.piece[data-color="black"][data-role="pawn"] {
     background-image: url('../../../assets/images/pieces/merida/bP.svg');
 }

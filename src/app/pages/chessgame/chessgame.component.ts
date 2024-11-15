@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Chess } from 'chess.js';
+import { Chess, Color, PieceSymbol, Square } from 'chess.js';
 import { CommonModule } from '@angular/common';
 import { ChessGameService } from '../../services/chessgame.service';
 import { ChessboardComponent } from "../../components/chessboard/chessboard.component";
@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Save } from '../../models/chess/save.model';
+import { Key, MoveMetadata, Piece, Role } from 'chessground/types';
 
 @Component({
   selector: 'app-chessgame',
@@ -142,6 +143,16 @@ export class ChessgameComponent {
       save.history?.forEach(move => this.game.move(move));
       this.fen = this.game.fen();
     }
+  }
+
+  dragDropPiece({pieceSymbol, color, key}: {pieceSymbol: string, color: string, key: string}): void {
+    this.game.put({type: pieceSymbol as PieceSymbol, color: color as Color}, key as Square);
+    this.fen = this.game.fen();
+  }
+
+  clearBoard(): void {
+    this.game.clear();
+    this.fen = this.game.fen();
   }
 
   ngOnDestroy(): void {

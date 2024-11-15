@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 
 import { Chessground } from 'chessground';
 import { ChessGameService } from '../../services/chessgame.service';
@@ -21,7 +20,7 @@ export class ChessboardComponent implements OnChanges {
   @Input() fen: string = '';
   @Input() isBotPlaysAsWhite: boolean | null = false;
   @Output() move = new EventEmitter<string>();
-
+  @Output() piece = new EventEmitter<{pieceSymbol: string, color: string, key: string}>();
 
   constructor(private chessGame: ChessGameService) {
   }
@@ -48,13 +47,12 @@ export class ChessboardComponent implements OnChanges {
         },
         events: {
           dropNewPiece: (piece: Piece, key: Key) => {
-            console.log('dropNewPiece', piece, key);
-          },
-          insert: (elements: any) => {
-            console.log('insert', elements);
-          },
-          select: (key: Key) => {
-            // console.log('select', key);
+            const color = piece.color.charAt(0);
+            let pieceSymbol = piece.role.charAt(0);
+            if (piece.role === 'knight') {
+              pieceSymbol = 'n';
+            }
+            this.piece.emit({pieceSymbol, color,  key});
           },
         },
         premovable: {
@@ -130,20 +128,16 @@ export class ChessboardComponent implements OnChanges {
   highlightInvalidMove(from: string, to: string): void {
     
     this.board.set({ drawable: { autoShapes: [
-      // {
-      //   orig: from,
-      //   dest: from,
-      //   customSvg: {
-      //     html: '<square cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />',
-      //     center: 'dest',
-      //   }
-        
-      // },
       {
         orig: from,
         dest: to,
         customSvg: {
-          html: '<svg width="80" height="80" viewBox="0 0 24 24" fill="#882020" stroke="#882020" stroke-width="3" opacity="0.7" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="20" y2="20" /><line x1="20" y1="4" x2="4" y2="20" /></svg>',
+          html: '<svg width="80" height="80" \
+          viewBox="0 0 24 24" fill="#882020" stroke="#882020" \
+          stroke-width="3" opacity="0.7" \
+          stroke-linecap="round" stroke-linejoin="round">\
+          <line x1="7" y1="7" x2="20" y2="20" />\
+          <line x1="20" y1="4" x2="4" y2="20" /></svg>',
           center: 'dest',
         }
         
@@ -164,7 +158,7 @@ export class ChessboardComponent implements OnChanges {
   }
 
   dragNewPiece(piece: Piece, event: Event): void {
-    this.board.dragNewPiece(piece, event);
+    this.board.dragNewPiece(piece, event, true);
   }
 
 }

@@ -34,7 +34,7 @@
     </div>
 
     <div class="chess-content">
-        <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (move)="onMove($event)"></app-chessboard>
+        <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (move)="onMove($event)" (piece)="dragDropPiece($event)"></app-chessboard>
         <app-available-moves *ngIf="blindfoldMode" [fen]="fen" (move)="onMove($event)"></app-available-moves>
     
         <div class="move-history">
@@ -50,6 +50,7 @@
     </div>
     <div class="undo">
         <button (click)="undoMove()">Undo Move</button>
+        <button (click)="clearBoard()">Clear Board</button>
     </div>    
     
 </div>
