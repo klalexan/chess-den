@@ -1,0 +1,37 @@
+<div class="board-editor">
+    <div class="spare spare-buttom spare-white">
+        <div class="no-square pointer">
+            <div class="piece" data-role="king" data-color="black" (mousedown)="dragNewPiece({role: 'king', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="queen" data-color="black" (mousedown)="dragNewPiece({role: 'queen', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="rook" data-color="black" (mousedown)="dragNewPiece({role: 'rook', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="bishop" data-color="black" (mousedown)="dragNewPiece({role: 'bishop', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="knight" data-color="black" (mousedown)="dragNewPiece({role: 'knight', color: 'black'}, $event)"></div>
+            <div class="piece" data-role="pawn" data-color="black" (mousedown)="dragNewPiece({role: 'pawn', color: 'black'}, $event)"></div>
+            <div class="piece" ></div>
+            <div class="piece" data-role="trash" (click)="clear.emit('b')"></div>
+        </div>
+    </div>
+    
+</div>
+<div class="blue merida chessboard-area">
+    <div id="board" class="chessboard"></div>
+</div>
+<div class="board-editor">
+    <div class="spare spare-buttom spare-white">
+        <div class="no-square pointer">
+            <div class="piece" data-role="king" data-color="white" (mousedown)="dragNewPiece({role: 'king', color: 'white'}, $event)" ></div>
+            <div class="piece" data-role="queen" data-color="white" (mousedown)="dragNewPiece({role: 'queen', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="rook" data-color="white" (mousedown)="dragNewPiece({role: 'rook', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="bishop" data-color="white" (mousedown)="dragNewPiece({role: 'bishop', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="knight" data-color="white" (mousedown)="dragNewPiece({role: 'knight', color: 'white'}, $event)"></div>
+            <div class="piece" data-role="pawn" data-color="white" (mousedown)="dragNewPiece({role: 'pawn', color: 'white'}, $event)"></div>
+            <div class="piece" ></div>
+            <div class="piece" data-role="trash" (click)="clear.emit('w')"></div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="undo">
+    <button (click)="clearBoard()">Undo Move</button>
+</div> 

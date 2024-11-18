@@ -20,8 +20,6 @@ export class ChessboardComponent implements OnChanges {
   @Input() fen: string = '';
   @Input() isBotPlaysAsWhite: boolean | null = false;
   @Output() move = new EventEmitter<string>();
-  @Output() clear = new EventEmitter<string>();
-  @Output() piece = new EventEmitter<{pieceSymbol: string, color: string, key: string}>();
 
   constructor(private chessGame: ChessGameService) {
   }
@@ -40,21 +38,10 @@ export class ChessboardComponent implements OnChanges {
           events: {
             after: (from: string, to: string) => this.onMove(from, to)
           },
-          afterNewPiece: (role: Role, key: Key, metadata: MoveMetadata) => {
-            console.log('dropNewPiece', role, key);
-          },
           color: 'both',
           showDests: true,
         },
         events: {
-          dropNewPiece: (piece: Piece, key: Key) => {
-            const color = piece.color.charAt(0);
-            let pieceSymbol = piece.role.charAt(0);
-            if (piece.role === 'knight') {
-              pieceSymbol = 'n';
-            }
-            this.piece.emit({pieceSymbol, color,  key});
-          },
         },
         premovable: {
           enabled: true,
@@ -63,6 +50,7 @@ export class ChessboardComponent implements OnChanges {
         draggable: {
           enabled: true,
           showGhost: true,
+          deleteOnDropOff: false,
         },
         drawable: {
           enabled: true,
@@ -156,10 +144,6 @@ export class ChessboardComponent implements OnChanges {
     setTimeout(() => {
       this.board.set({ drawable: { autoShapes: [] }});
     }, 1000);
-  }
-
-  dragNewPiece(piece: Piece, event: Event): void {
-    this.board.dragNewPiece(piece, event, true);
   }
 
 }

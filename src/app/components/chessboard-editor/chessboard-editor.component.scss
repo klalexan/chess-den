@@ -1,0 +1,104 @@
+@import '../../../assets/chess.scss';
+
+.chessboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 2%;
+}
+
+.chessboard {
+    width: $chessboard-width;
+    height: $chessboard-width;
+}
+
+.chessboard-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 2%;
+}
+
+.piece {
+    width: calc($chessboard-width / 8);
+    height: calc($chessboard-width / 8);
+    background-size: cover;
+    display: inline-block;
+  }
+
+.piece:hover {
+    cursor: pointer;
+}  
+  
+/* White pieces */
+.piece[data-color="white"][data-role="queen"] {
+    background-image: url('../../../assets/images/pieces/merida/wQ.svg');
+}
+
+.piece[data-color="white"][data-role="king"] {
+    background-image: url('../../../assets/images/pieces/merida/wK.svg');
+}
+
+/* Black pieces */
+.piece[data-color="white"][data-role="bishop"] {
+    background-image: url('../../../assets/images/pieces/merida/wB.svg');
+}
+
+.piece[data-color="white"][data-role="knight"] {
+    background-image: url('../../../assets/images/pieces/merida/wN.svg');
+}
+
+/* White pieces */
+.piece[data-color="white"][data-role="rook"] {
+    background-image: url('../../../assets/images/pieces/merida/wR.svg');
+}
+
+.piece[data-color="white"][data-role="pawn"] {
+    background-image: url('../../../assets/images/pieces/merida/wP.svg');
+}
+
+/* Black pieces */
+.piece[data-color="black"][data-role="queen"] {
+    background-image: url('../../../assets/images/pieces/merida/bQ.svg');
+}
+
+.piece[data-color="black"][data-role="king"] {
+    background-image: url('../../../assets/images/pieces/merida/bK.svg');
+}
+
+/* White pieces */
+.piece[data-color="black"][data-role="bishop"] {
+    background-image: url('../../../assets/images/pieces/merida/bP.svg');
+}
+
+.piece[data-color="black"][data-role="knight"] {
+    background-image: url('../../../assets/images/pieces/merida/bN.svg');
+}
+
+/* Black pieces */
+.piece[data-color="black"][data-role="rook"] {
+    background-image: url('../../../assets/images/pieces/merida/bR.svg');
+}
+
+.piece[data-color="black"][data-role="pawn"] {
+    background-image: url('../../../assets/images/pieces/merida/bP.svg');
+}
+
+.piece[data-role="trash"] {
+    background-image: url('../../../assets/images/trash.svg');
+}
+
+.spare {
+    display: flex;
+    flex-direction: row;
+    // justify-content: space-around;
+    align-items: center;
+    margin-top: 2%;
+}
+
+.trash-cursor {
+    cursor: url('../../../assets/images/cursors/trash.cur') 16 16, auto; 
+}
+

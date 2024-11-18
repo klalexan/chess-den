@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { Chess, Color, PieceSymbol, Square } from 'chess.js';
 import { CommonModule } from '@angular/common';
 import { ChessGameService } from '../../services/chessgame.service';
@@ -9,10 +9,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Save } from '../../models/chess/save.model';
+import { MoveHistoryComponent } from "../../components/move-history/move-history.component";
 
 @Component({
   selector: 'app-chessgame',
-  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule, MatCheckboxModule, MatSelectModule],
+  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule, MatCheckboxModule, MatSelectModule, MoveHistoryComponent],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
@@ -28,7 +29,8 @@ export class ChessgameComponent {
 
   constructor(
     private chessGame: ChessGameService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private renderer: Renderer2
     ) {
 
       this.game = this.chessGame.newGame();
@@ -146,19 +148,7 @@ export class ChessgameComponent {
 
   dragDropPiece({pieceSymbol, color, key}: {pieceSymbol: string, color: string, key: string}): void {
     this.game.put({type: pieceSymbol as PieceSymbol, color: color as Color}, key as Square);
-    this.fen = this.game.fen();
-  }
-
-  clearBoard(color: string): void {
-    const brd = this.game.board();
-    brd.forEach((row, rowIndex) => {
-      row.forEach((piece, colIndex) => {
-        if (piece?.color === color) {
-          const obj = brd[rowIndex][colIndex]; 
-          this.game.remove(obj?.square as Square);
-        }
-      });
-    });
+    // this.game.remove(key as Square);
     this.fen = this.game.fen();
   }
 
