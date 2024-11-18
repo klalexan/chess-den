@@ -55,7 +55,7 @@ export class ChessboardComponent implements OnChanges {
         drawable: {
           enabled: true,
           visible: true,
-        },
+       },
         fen: this.fen
       });
     }
@@ -64,6 +64,12 @@ export class ChessboardComponent implements OnChanges {
   ngOnChanges(): void {
     if (this.board) {
       this.board.set({ fen: this.fen, orientation: this.isBotPlaysAsWhite ? 'black' : 'white', });
+      const game = this.chessGame.loadGameFromFen(this.fen);
+      if (game.isCheck()) {
+        game.turn() === 'w' ? this.board.set({ check: 'white' }) : this.board.set({ check: 'black' });
+      } else {
+        this.board.set({ check: false });
+      }
     } else {
       this.initializeBoard();
     }
@@ -94,6 +100,13 @@ export class ChessboardComponent implements OnChanges {
       this.openPromotionDialog(move.color, move.to);
       return;
     }
+
+    if (move.san.includes('+')) {
+      game.turn() === 'w' ? this.board.set({ check: 'black' }) : this.board.set({ check: 'white' });
+    } else {
+      this.board.set({ check: false });
+    }
+
     this.move.emit(move.san);
   }
 
@@ -131,7 +144,6 @@ export class ChessboardComponent implements OnChanges {
         }
         
       },
-
       {
         orig: from,
         dest: to,
