@@ -1,12 +1,14 @@
 
 <div class="chess-page">
-    <div class="game-settings">
-        <div class="bot-level">
+    <button *ngIf="!editMode"  (click)="editMode = !editMode">Edit
+    </button>
+    <div class="game-settings" *ngIf="!editMode">
+        <div class="bot-level" >
             <label for="bot-level">Engine Level:</label>
             <select id="bot-level" class="form-control" [formControl]="botLevel">
-              <option *ngFor="let level of botLevels()" [value]="level.value">
+            <option *ngFor="let level of botLevels()" [value]="level.value">
                 {{ level.label }}
-              </option>
+            </option>
             </select>
         </div>
         <button (click)="toggleBlindfold()">
@@ -21,25 +23,25 @@
         </div>
 
         <div class="fen-input">
-          <button (click)="loadSavedGame()">Continue Game</button>
+        <button (click)="loadSavedGame()">Continue Game</button>
         </div>
 
         <button (click)="createNewGame()">New Game</button>
         
-        
     </div>
 
-    <div class="engine-move">
+    <div class="engine-move" *ngIf="!editMode">
         <h3>Engine Move: {{ engineMove }}</h3>
     </div>
 
     <div class="chess-content" id="chess-content">
-        <app-chessboard *ngIf="!blindfoldMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (move)="onMove($event)"></app-chessboard>
-        <app-available-moves *ngIf="blindfoldMode" [fen]="fen" (move)="onMove($event)"></app-available-moves>
-        <app-move-history [moveHistory]="moveHistory"></app-move-history>
+        <app-chessboard *ngIf="!blindfoldMode && !editMode" [fen]="fen" [isBotPlaysAsWhite]="isBotPlaysAsWhite.value" (move)="onMove($event)"></app-chessboard>
+        <app-available-moves *ngIf="blindfoldMode && !editMode" [fen]="fen" (move)="onMove($event)"></app-available-moves>
+        <app-chessboard-editor *ngIf="editMode" (fen)="setEditedBoard($event)"></app-chessboard-editor>
+        <app-move-history *ngIf="!editMode"  [moveHistory]="moveHistory"></app-move-history>
 
     </div>
-    <div class="undo">
+    <div class="undo" *ngIf="!editMode">
         <button (click)="undoMove()">Undo Move</button>
     </div>    
     

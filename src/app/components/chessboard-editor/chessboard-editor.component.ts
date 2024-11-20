@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Chessground } from 'chessground';
 import { Role, Key, MoveMetadata, Piece } from 'chessground/types';
 import { ChessGameService } from '../../services/chessgame.service';
@@ -11,38 +11,28 @@ import { ChessGameService } from '../../services/chessgame.service';
   templateUrl: './chessboard-editor.component.html',
   styleUrl: './chessboard-editor.component.scss'
 })
-export class ChessboardEditorComponent {
+export class ChessboardEditorComponent implements OnInit{
 
   board: any;
-  @Input() fen: string = '';
-  @Input() isBotPlaysAsWhite: boolean | null = false;
-  @Output() move = new EventEmitter<string>();
-  @Output() clear = new EventEmitter<string>();
-  @Output() piece = new EventEmitter<{pieceSymbol: string, color: string, key: string}>();
-
+  @Output() fen = new EventEmitter<string>();
+  // @Input() isBotPlaysAsWhite: boolean | null = false;
+  // @Output() move = new EventEmitter<string>();
+  // @Output() clear = new EventEmitter<string>();
+  // @Output() piece = new EventEmitter<{pieceSymbol: string, color: string, key: string}>();
+  FEN: string = '';
   constructor(private chessGame: ChessGameService) {
+    
+  }
+
+  ngOnInit(): void {
+    this.initializeBoard();
   }
 
   initializeBoard(): void {
-    const boardElement = document.getElementById('board');
+    const boardElement = document.getElementById('board-editor');
     if (boardElement) {
       this.board = Chessground(boardElement, {});
       this.board.set({
-        orientation: this.isBotPlaysAsWhite ? 'black' : 'white',
-        highlight: {
-          lastMove: false,
-          check: true,
-        },
-        movable: {
-          events: {
-            // after: (from: string, to: string) => this.onMove(from, to)
-          },
-          afterNewPiece: (role: Role, key: Key, metadata: MoveMetadata) => {
-            console.log('dropNewPiece', role, key);
-          },
-          color: 'both',
-          showDests: true,
-        },
         events: {
           dropNewPiece: (piece: Piece, key: Key) => {
             const color = piece.color.charAt(0);
@@ -50,35 +40,35 @@ export class ChessboardEditorComponent {
             if (piece.role === 'knight') {
               pieceSymbol = 'n';
             }
-            this.piece.emit({pieceSymbol, color,  key});
+            // this.piece.emit({pieceSymbol, color,  key});
           },
           select: (key: Key) => {
             console.log('select' + key);
             const docStyle = document.getElementsByTagName('cg-board')[0] as HTMLElement;
             if (docStyle && docStyle.style.cursor && docStyle.style.cursor.includes('trash.cur')) {
-              this.piece.emit({pieceSymbol: 'k',color: 'w', key: key as string});            
+              // this.piece.emit({pieceSymbol: 'k',color: 'w', key: key as string});            
             }
           },
           change: () => {
             
           }
         },
-        premovable: {
-          enabled: true,
-          showDests: true,
-        },
-        draggable: {
-          enabled: true,
-          showGhost: true,
-          deleteOnDropOff: false,
-        },
-        drawable: {
-          enabled: true,
-          visible: true,
-        },
-        fen: this.fen
+        // draggable: {
+        //   enabled: true,
+        //   showGhost: true,
+        //   deleteOnDropOff: false,
+        // },
+        // drawable: {
+        //   enabled: true,
+        //   visible: true,
+        // },
+        fen: this.FEN
       });
     }
+  }
+
+  start(): void {
+    this.fen.emit(this.board.getFen() + ' w - - 0 1');
   }
 
   clearBoard(): void {

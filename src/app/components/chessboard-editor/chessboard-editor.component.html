@@ -1,3 +1,5 @@
+<button (click)="start()">Start
+</button>
 <div class="board-editor">
     <div class="spare spare-buttom spare-white">
         <div class="no-square pointer">
@@ -8,13 +10,13 @@
             <div class="piece" data-role="knight" data-color="black" (mousedown)="dragNewPiece({role: 'knight', color: 'black'}, $event)"></div>
             <div class="piece" data-role="pawn" data-color="black" (mousedown)="dragNewPiece({role: 'pawn', color: 'black'}, $event)"></div>
             <div class="piece" ></div>
-            <div class="piece" data-role="trash" (click)="clear.emit('b')"></div>
+            <div class="piece" data-role="trash" (click)="clearBoard()"></div>
         </div>
     </div>
     
 </div>
 <div class="blue merida chessboard-area">
-    <div id="board" class="chessboard"></div>
+    <div id="board-editor" class="chessboard"></div>
 </div>
 <div class="board-editor">
     <div class="spare spare-buttom spare-white">
@@ -26,12 +28,8 @@
             <div class="piece" data-role="knight" data-color="white" (mousedown)="dragNewPiece({role: 'knight', color: 'white'}, $event)"></div>
             <div class="piece" data-role="pawn" data-color="white" (mousedown)="dragNewPiece({role: 'pawn', color: 'white'}, $event)"></div>
             <div class="piece" ></div>
-            <div class="piece" data-role="trash" (click)="clear.emit('w')"></div>
+            <div class="piece" data-role="trash" (click)="clearBoard()"></div>
         </div>
     </div>
     
 </div>
-
-<div class="undo">
-    <button (click)="clearBoard()">Undo Move</button>
-</div> 

@@ -1,13 +1,15 @@
 @import '../../../assets/chess.scss';
 
-.chessboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 2%;
+button {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 16px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
-
 .chessboard {
     width: $chessboard-width;
     height: $chessboard-width;

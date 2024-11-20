@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ChessgameComponent } from './pages/chessgame/chessgame.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { LichesswrapperComponent } from './pages/lichesswrapper/lichesswrapper.component';
+import { ChessboardEditorComponent } from './components/chessboard-editor/chessboard-editor.component';
 
 export const routes: Routes = [
 
@@ -20,6 +21,13 @@ export const routes: Routes = [
     {
         path: 'chessgame',
         component: ChessgameComponent,
+        canActivate: [],
+        data: {
+        }
+    },
+    {
+        path: 'board-editor',
+        component: ChessboardEditorComponent,
         canActivate: [],
         data: {
         }

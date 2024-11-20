@@ -39,9 +39,13 @@ export class ChessboardComponent implements OnChanges {
             after: (from: string, to: string) => this.onMove(from, to)
           },
           color: 'both',
-          showDests: true,
         },
         events: {
+
+          select: (key: Key) => {
+            console.log('selected ' + key);
+            
+          }
         },
         premovable: {
           enabled: true,
@@ -73,6 +77,8 @@ export class ChessboardComponent implements OnChanges {
     } else {
       this.initializeBoard();
     }
+
+
   }
 
   onMove(from: string, to: string): void {

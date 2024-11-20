@@ -10,10 +10,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Save } from '../../models/chess/save.model';
 import { MoveHistoryComponent } from "../../components/move-history/move-history.component";
+import { ChessboardEditorComponent } from "../../components/chessboard-editor/chessboard-editor.component";
 
 @Component({
   selector: 'app-chessgame',
-  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule, MatCheckboxModule, MatSelectModule, MoveHistoryComponent],
+  imports: [CommonModule, ChessboardComponent, AvailableMovesComponent, ReactiveFormsModule, MatCheckboxModule, MatSelectModule, MoveHistoryComponent, ChessboardEditorComponent],
   standalone: true,
   templateUrl: './chessgame.component.html',
   styleUrl: './chessgame.component.scss'
@@ -26,6 +27,7 @@ export class ChessgameComponent {
   inputFEN = new FormControl('8/2k2P2/8/8/4P3/4K3/8/8 w - - 0 1');
   engineMove: string = '';
   botLevel = new FormControl(1);
+  editMode = false;
 
   constructor(
     private chessGame: ChessGameService,
@@ -150,6 +152,15 @@ export class ChessgameComponent {
     this.game.put({type: pieceSymbol as PieceSymbol, color: color as Color}, key as Square);
     // this.game.remove(key as Square);
     this.fen = this.game.fen();
+  }
+
+  setEditedBoard(fen: string): void {
+    this.fen = fen;
+    this.editMode = false;
+    this.game = this.chessGame.loadGameFromFen(fen);
+    setTimeout(() => {
+      this.makeEngineMoveIfnBotTurn();
+    }, 1000);
   }
 
   ngOnDestroy(): void {
