@@ -1,6 +1,12 @@
 # ChessDen
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
+Chess den its a place where you can learn and play chess !
+
+The app is in progress, and will be built for all levels , but the main focus and most of logic and functionality for intermidiate level .
+The player is able to switch to blindfold or regular mode after every move ( after remembering the position ). 
+Currently the game only between a player and stockfish engine, but the player can switch sides after each move. 
+
+
 
 ## Development server
 
