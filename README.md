@@ -1,10 +1,22 @@
 # ChessDen
 
-Chess den its a place where you can learn and play chess !
+Chess Den
 
-The app is in progress, and will be built for all levels , but the main focus and most of logic and functionality for intermidiate level .
-The player is able to switch to blindfold or regular mode after every move ( after remembering the position ). 
-Currently the game only between a player and stockfish engine, but the player can switch sides after each move. 
+Learn and play chess—built for all levels, with a special focus on intermediate players.
+
+Status: In development.
+
+What’s inside
+
+Intermediate-first training. Most logic and features are tuned for players beyond the basics.
+
+Blindfold toggle per move. Switch between blindfold and regular mode after any move (once you’ve memorized the position).
+
+Engine sparring. Play against Stockfish; you can also switch sides after each move.
+
+Planned
+
+More training modes and play options (e.g., human vs. human, puzzles, time controls).
 
 
 
